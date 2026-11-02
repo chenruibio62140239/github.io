@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P.S健康莊園 HEALTH MANOR - 官方線上旗艦館</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome 圖標庫 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Noto Sans TC & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <!-- Alpine.js 核心邏輯 -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0A2526',      // 沉穩純深墨綠底色
+              card: '#0f3234',      // 靜態深色卡片底色
+              primary: '#0D6E6E',   // 莊園翡翠綠
+              accent: '#E5C467',    // 香檳金高光
+              accentLight: '#F3DE9C',
+              light: '#F8FAF9',
+              muted: '#8CA3A0',
+              border: 'rgba(229, 196, 103, 0.2)'
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0A2526;
+      color: #E2E8F0;
+      font-family: 'Noto Sans TC', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* 隱藏滾動條但保持滾動 */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* 滑鼠懸停（Hover）漸層光效卡片 */
+    .hover-gradient-card {
+      background-color: #0f3234;
+      border: 1px solid rgba(229, 196, 103, 0.15);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hover-gradient-card:hover {
+      background: linear-gradient(145deg, #134244 0%, #1a5658 50%, #0d3637 100%);
+      border-color: rgba(229, 196, 103, 0.6);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.45), 0 0 20px rgba(229, 196, 103, 0.15);
+    }
+
+    /* 懸停漸層按鈕 */
+    .btn-hover-gradient {
+      transition: all 0.3s ease;
+    }
+    .btn-hover-gradient:hover {
+      background: linear-gradient(135deg, #E5C467 0%, #d4b050 50%, #10b981 100%);
+      color: #071d1e;
+      box-shadow: 0 4px 15px rgba(229, 196, 103, 0.35);
+      border-color: transparent;
+    }
+  </style>
+</head>
+<body x-data="storeData()" class="relative min-h-screen flex flex-col justify-between selection:bg-brand-accent selection:text-brand-dark">
+
+  <!-- ================= 頂部導覽列 (Navbar) ================= -->
+  <header class="sticky top-0 z-40 bg-[#0A2526]/90 backdrop-blur-md border-b border-white/10 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- 官方品牌識別 Logo -->
+      <a href="#" class="flex items-center space-x-3.5 group">
+        <div class="relative w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-brand-accent via-emerald-400 to-amber-200 shadow-md group-hover:scale-105 transition-transform duration-300">
+          <img src="https://raw.githubusercontent.com/doraemon770101/github.io/main/images/PS%E7%B6%B2%E9%A0%81%E9%A6%96%E5%9C%96.JPG" 
+               alt="P.S健康莊園" 
+               class="w-full h-full object-cover rounded-full"
+               onerror="this.src='https://placehold.co/100x100/0A2526/E5C467?text=PS'">
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xl sm:text-2xl font-bold tracking-wider text-white group-hover:text-brand-accent transition-colors">
+            P.S健康莊園
+          </span>
+          <span class="text-[10px] tracking-widest text-brand-muted uppercase font-serif">
+            HEALTH MANOR
+          </span>
+        </div>
+      </a>
+
+      <!-- 導覽操作區 -->
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <!-- 搜尋列 -->
+        <div class="relative hidden sm:block w-52 md:w-64">
+          <input type="text" 
+                 x-model="searchQuery" 
+                 placeholder="搜尋莊園保養品項..." 
+                 class="w-full bg-white/5 border border-white/15 text-sm rounded-full py-2 pl-9 pr-4 text-white placeholder-brand-muted/70 focus:outline-none focus:border-brand-accent focus:bg-white/10 transition-all">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-brand-muted"></i>
+          <button x-show="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-muted hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- 購物車按鈕 -->
+        <button @click="cartOpen = true" 
+                class="relative flex items-center justify-center w-11 h-11 rounded-full bg-white/5 hover:bg-white/15 border border-white/15 hover:border-brand-accent text-white hover:text-brand-accent transition-all duration-300">
+          <i class="fa-solid fa-bag-shopping text-lg"></i>
+          <span x-show="totalCartCount > 0" 
+                x-text="totalCartCount" 
+                x-transition 
+                class="absolute -top-1 -right-1 bg-amber-500 text-slate-950 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-lg border-2 border-brand-dark"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 首頁形象看板 (Hero Banner) ================= -->
+  <section class="relative py-12 md:py-16 border-b border-white/10 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-brand-accent/40 text-brand-accent text-xs font-medium tracking-wide mb-6">
+        <i class="fa-solid fa-seedling text-emerald-400"></i>
+        <span>原廠正貨保證・極致純粹修護</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-wide leading-tight mb-4">
+        回歸自然 <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-amber-200 to-emerald-300">健康莊園</span>
+      </h1>
+      
+      <p class="max-w-2xl mx-auto text-sm sm:text-base text-slate-300 leading-relaxed font-light mb-8">
+        專為現代女性與全家健康策劃。精選義大利賽吉兒頂級私密呵護、法國高純度初乳乳清、德國專業營養補充及第一等級醫療修護凝膠。
+      </p>
+
+      <!-- 全館優惠特色條 -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto text-left">
+        <div class="p-3.5 rounded-xl hover-gradient-card">
+          <div class="text-brand-accent text-lg mb-1"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="text-white text-xs font-bold">全館滿 NT$ 2,000</div>
+          <div class="text-[11px] text-brand-muted">即享黑貓宅配免運</div>
+        </div>
+        <div class="p-3.5 rounded-xl hover-gradient-card">
+          <div class="text-emerald-400 text-lg mb-1"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="text-white text-xs font-bold">原廠公司正貨</div>
+          <div class="text-[11px] text-brand-muted">歐洲原裝進口合法報關</div>
+        </div>
+        <div class="p-3.5 rounded-xl hover-gradient-card">
+          <div class="text-amber-400 text-lg mb-1"><i class="fa-solid fa-tags"></i></div>
+          <div class="text-white text-xs font-bold">多件專屬折扣</div>
+          <div class="text-[11px] text-brand-muted">滿件立享現折特惠</div>
+        </div>
+        <div class="p-3.5 rounded-xl hover-gradient-card">
+          <div class="text-teal-300 text-lg mb-1"><i class="fa-solid fa-user-doctor"></i></div>
+          <div class="text-white text-xs font-bold">專業藥師諮詢</div>
+          <div class="text-[11px] text-brand-muted">醫材衛教專線支援</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 商品主展區 ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-grow">
+    
+    <!-- 分類按鈕選單 -->
+    <div class="flex items-center space-x-2 pb-6 overflow-x-auto no-scrollbar">
+      <template x-for="cat in categories" :key="cat.id">
+        <button @click="currentCategory = cat.id"
+                :class="currentCategory === cat.id 
+                  ? 'bg-gradient-to-r from-brand-accent to-amber-400 text-slate-950 font-bold shadow-md' 
+                  : 'bg-white/5 text-slate-300 border border-white/10 btn-hover-gradient'"
+                class="px-5 py-2 rounded-full text-xs sm:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2">
+          <span x-text="cat.name"></span>
+          <span class="text-[10px] opacity-75 font-mono" x-text="`(${getCategoryCount(cat.id)})`"></span>
+        </button>
+      </template>
+    </div>
+
+    <!-- 搜尋結果提醒 -->
+    <div x-show="searchQuery" class="mb-6 flex items-center justify-between text-xs text-brand-muted bg-white/5 p-3 rounded-lg border border-white/10">
+      <div>
+        正在搜尋：<span class="text-brand-accent font-bold" x-text="searchQuery"></span>
+        （共找到 <span x-text="filteredProducts.length"></span> 筆）
+      </div>
+      <button @click="searchQuery = ''" class="text-brand-accent hover:underline">清除搜尋</button>
+    </div>
+
+    <!-- 商品卡片列表 Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <template x-for="product in filteredProducts" :key="product.id">
+        <div class="rounded-2xl flex flex-col justify-between overflow-hidden hover-gradient-card group">
+          
+          <!-- 商品上方圖文區 -->
+          <div>
+            <!-- 商品主圖 -->
+            <div class="relative w-full aspect-square bg-slate-900/60 overflow-hidden cursor-pointer" @click="openModal(product)">
+              <img :src="getCurrentProductImage(product)" 
+                   :alt="product.name"
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                   onerror="this.src='https://placehold.co/600x600/0A2526/E5C467?text=P.S+莊園'">
+              
+              <!-- 標籤 Badge -->
+              <div class="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-brand-dark/90 text-brand-accent border border-brand-accent/30 shadow-sm backdrop-blur-sm" x-text="product.tag"></span>
+                <template x-if="product.discountBadge">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-600 text-white shadow-sm" x-text="product.discountBadge"></span>
+                </template>
+              </div>
+
+              <!-- 快速查看按鈕 -->
+              <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                <span class="px-4 py-1.5 rounded-full bg-brand-accent text-slate-950 text-xs font-bold shadow-lg">
+                  <i class="fa-regular fa-eye mr-1"></i> 查看完整介紹
+                </span>
+              </div>
+            </div>
+
+            <!-- 商品文字內容 -->
+            <div class="p-4 sm:p-5">
+              <h3 class="text-base font-bold text-white group-hover:text-brand-accent transition-colors line-clamp-2 cursor-pointer mb-2"
+                  @click="openModal(product)"
+                  x-text="product.name"></h3>
+              
+              <p class="text-xs text-brand-muted line-clamp-2 leading-relaxed mb-4" x-text="product.desc"></p>
+
+              <!-- 規格容量切換 (若有) -->
+              <template x-if="product.variants && product.variants.length > 1">
+                <div class="mb-4">
+                  <label class="block text-[11px] text-brand-muted mb-1.5 font-medium">選擇規格 / 尺寸：</label>
+                  
+                  <!-- 輔具專區使用下拉式選單 (Select) -->
+                  <template x-if="product.category === 'assistive'">
+                    <select :value="product.selectedVariantIndex"
+                            @change="selectVariant(product, parseInt($event.target.value))"
+                            class="w-full bg-[#0A2526] border border-brand-accent/40 rounded-lg px-3 py-2 text-xs text-brand-accent focus:outline-none focus:border-brand-accent transition">
+                      <template x-for="(variant, vIndex) in product.variants" :key="vIndex">
+                        <option :value="vIndex" x-text="`${variant.label} - NT$ ${variant.price}`"></option>
+                      </template>
+                    </select>
+                  </template>
+
+                  <!-- 其他分類保留按鈕式選擇 -->
+                  <template x-if="product.category !== 'assistive'">
+                    <div class="flex flex-wrap gap-1.5">
+                      <template x-for="(variant, vIndex) in product.variants" :key="vIndex">
+                        <button @click="selectVariant(product, vIndex)"
+                                :class="product.selectedVariantIndex === vIndex ? 'bg-brand-accent text-slate-950 font-bold border-brand-accent' : 'bg-white/5 text-slate-300 border-white/15 hover:border-white/30'"
+                                class="text-xs px-2.5 py-1 rounded-md border transition-all"
+                                x-text="variant.label"></button>
+                      </template>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <!-- 購買數量選擇 -->
+              <div class="flex items-center justify-between mb-4 bg-white/5 p-2 rounded-xl border border-white/10">
+                <span class="text-xs text-brand-muted">購買數量</span>
+                <div class="flex items-center space-x-2">
+                  <button @click="changeBuyQty(product, -1)" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs transition-colors">
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <span class="w-8 text-center text-sm font-bold text-white" x-text="product.buyQty || 1"></span>
+                  <button @click="changeBuyQty(product, 1)" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs transition-colors">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 價格動態計算 -->
+              <div class="space-y-1 mb-2">
+                <template x-if="isProductDiscountActive(product)">
+                  <div class="flex items-baseline gap-2 flex-wrap">
+                    <span class="text-2xl font-black text-rose-400">
+                      NT$ <span x-text="getProductCalculatedTotal(product)"></span>
+                    </span>
+                    <span class="text-xs text-slate-500 line-through">
+                      NT$ <span x-text="getProductRawTotal(product)"></span>
+                    </span>
+                    <span class="text-[10px] bg-rose-500/25 text-rose-300 border border-rose-500/40 px-1.5 py-0.5 rounded font-bold">
+                      特惠單件 NT$ <span x-text="getProductEffectiveUnitPrice(product)"></span>
+                    </span>
+                  </div>
+                </template>
+                <template x-if="!isProductDiscountActive(product)">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-2xl font-black text-brand-accent">
+                      NT$ <span x-text="getProductCalculatedTotal(product)"></span>
+                    </span>
+                    <span x-show="(product.buyQty || 1) > 1" class="text-xs text-brand-muted">
+                      (單件 NT$ <span x-text="getProductUnitPrice(product)"></span>)
+                    </span>
+                  </div>
+                </template>
+
+                <!-- 滿件折提醒 -->
+                <template x-if="product.bulkDiscount && (product.buyQty || 1) < product.bulkDiscount.minQty">
+                  <p class="text-[11px] text-amber-300 flex items-center gap-1">
+                    <i class="fa-solid fa-tag text-amber-400"></i>
+                    <span>再加 <strong class="text-brand-accent font-bold" x-text="product.bulkDiscount.minQty - (product.buyQty || 1)"></strong> 件享多件優惠！</span>
+                  </p>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- 加入購物車按鈕 -->
+          <div class="p-4 sm:p-5 pt-0">
+            <button @click="addToCart(product)"
+                    class="w-full py-2.5 rounded-xl bg-brand-accent hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all shadow-md active:scale-95">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>加入莊園提袋</span>
+            </button>
+          </div>
+
+        </div>
+      </template>
+    </div>
+
+    <!-- 無搜尋結果提示 -->
+    <div x-show="filteredProducts.length === 0" class="text-center py-20 bg-white/5 rounded-2xl border border-white/10 mt-6">
+      <i class="fa-regular fa-face-frown text-4xl text-brand-muted mb-3"></i>
+      <h3 class="text-lg font-bold text-white mb-1">找不到相關商品</h3>
+      <p class="text-xs text-brand-muted mb-4">請嘗試更換關鍵字或點選不同分類</p>
+      <button @click="searchQuery = ''; currentCategory = 'all'" class="px-5 py-2 rounded-full bg-brand-accent text-slate-950 text-xs font-bold">
+        瀏覽所有商品
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ================= 商品詳情彈窗 (Modal) ================= -->
+  <div x-show="modalOpen" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+       style="display: none;">
+    
+    <div @click.away="modalOpen = false" 
+         class="relative w-full max-w-4xl bg-[#0e3234] border border-brand-accent/40 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+      
+      <!-- 關閉按鈕 -->
+      <button @click="modalOpen = false" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/50 text-white hover:text-brand-accent hover:bg-black flex items-center justify-center transition-all">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- 左側：圖片輪播與縮圖 -->
+      <div class="md:w-1/2 p-6 bg-slate-950/40 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10">
+        <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-900 border border-white/10 shadow-inner">
+          <img :src="modalActiveImage" 
+               class="w-full h-full object-contain"
+               alt="商品詳情照"
+               onerror="this.src='https://placehold.co/600x600/0A2526/E5C467?text=PS+MANOR'">
+        </div>
+
+        <!-- 縮圖列表 -->
+        <template x-if="activeModalProduct && activeModalProduct.images && activeModalProduct.images.length > 1">
+          <div class="flex items-center gap-2 mt-4 overflow-x-auto pb-2 no-scrollbar">
+            <template x-for="(img, idx) in activeModalProduct.images" :key="idx">
+              <button @click="modalActiveImage = img"
+                      :class="modalActiveImage === img ? 'border-brand-accent ring-2 ring-brand-accent/50' : 'border-white/15 opacity-60 hover:opacity-100'"
+                      class="w-14 h-14 rounded-xl overflow-hidden border-2 flex-shrink-0 bg-slate-900 transition-all">
+                <img :src="img" class="w-full h-full object-cover">
+              </button>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!-- 右側：完整說明與下單區 -->
+      <div class="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
+        <template x-if="activeModalProduct">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-brand-accent/20 text-brand-accent border border-brand-accent/30" x-text="activeModalProduct.tag"></span>
+              <template x-if="activeModalProduct.discountBadge">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-600 text-white" x-text="activeModalProduct.discountBadge"></span>
+              </template>
+            </div>
+
+            <h2 class="text-xl sm:text-2xl font-bold text-white" x-text="activeModalProduct.name"></h2>
+
+            <!-- 規格選擇 (彈窗) -->
+            <template x-if="activeModalProduct.variants && activeModalProduct.variants.length > 1">
+              <div>
+                <label class="block text-xs text-brand-muted mb-1.5 font-medium">選擇規格 / 尺寸：</label>
+                
+                <!-- 輔具專區彈窗使用下拉式選單 -->
+                <template x-if="activeModalProduct.category === 'assistive'">
+                  <select :value="activeModalProduct.selectedVariantIndex"
+                          @change="selectVariant(activeModalProduct, parseInt($event.target.value))"
+                          class="w-full bg-[#0A2526] border border-brand-accent/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-brand-accent focus:outline-none focus:border-brand-accent transition">
+                    <template x-for="(variant, vIndex) in activeModalProduct.variants" :key="vIndex">
+                      <option :value="vIndex" x-text="`${variant.label} - NT$ ${variant.price}`"></option>
+                    </template>
+                  </select>
+                </template>
+
+                <!-- 其他分類保留按鈕式 -->
+                <template x-if="activeModalProduct.category !== 'assistive'">
+                  <div class="flex flex-wrap gap-2">
+                    <template x-for="(variant, vIndex) in activeModalProduct.variants" :key="vIndex">
+                      <button @click="selectVariant(activeModalProduct, vIndex)"
+                              :class="activeModalProduct.selectedVariantIndex === vIndex ? 'bg-brand-accent text-slate-950 font-bold border-brand-accent' : 'bg-white/5 text-slate-300 border-white/15 hover:border-white/30'"
+                              class="text-xs px-3 py-1.5 rounded-lg border transition-all"
+                              x-text="variant.label"></button>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </template>
+
+            <!-- 完整詳細描述 -->
+            <div class="border-t border-b border-white/10 py-4 max-h-56 overflow-y-auto pr-2 text-xs sm:text-sm text-slate-300 whitespace-pre-line leading-relaxed" x-text="activeModalProduct.detail"></div>
+
+            <!-- 數量與結帳試算 -->
+            <div class="flex items-center justify-between bg-white/5 p-3 rounded-2xl border border-white/10">
+              <span class="text-xs text-brand-muted font-medium">選擇購買數量</span>
+              <div class="flex items-center space-x-2">
+                <button @click="changeBuyQty(activeModalProduct, -1)" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span class="w-10 text-center text-base font-bold text-white" x-text="activeModalProduct.buyQty || 1"></span>
+                <button @click="changeBuyQty(activeModalProduct, 1)" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- 價格試算 -->
+            <div class="flex items-end justify-between pt-2">
+              <div>
+                <span class="text-xs text-brand-muted block">總計金額</span>
+                <template x-if="isProductDiscountActive(activeModalProduct)">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-rose-400">
+                      NT$ <span x-text="getProductCalculatedTotal(activeModalProduct)"></span>
+                    </span>
+                    <span class="text-xs text-slate-500 line-through">
+                      NT$ <span x-text="getProductRawTotal(activeModalProduct)"></span>
+                    </span>
+                  </div>
+                </template>
+                <template x-if="!isProductDiscountActive(activeModalProduct)">
+                  <span class="text-3xl font-black text-brand-accent">
+                    NT$ <span x-text="getProductCalculatedTotal(activeModalProduct)"></span>
+                  </span>
+                </template>
+              </div>
+
+              <button @click="addToCart(activeModalProduct); modalOpen = false"
+                      class="px-6 py-3 rounded-xl bg-brand-accent hover:bg-amber-400 text-slate-950 font-bold text-sm flex items-center gap-2 shadow-lg transition-transform active:scale-95">
+                <i class="fa-solid fa-cart-arrow-down"></i>
+                <span>加入購物袋</span>
+              </button>
+            </div>
+
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= 購物袋抽屜 (Cart Drawer) ================= -->
+  <div x-show="cartOpen" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm"
+       style="display: none;">
+    
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div @click.away="cartOpen = false" 
+           class="w-screen max-w-md bg-[#092223] border-l border-brand-accent/30 flex flex-col justify-between shadow-2xl">
+        
+        <!-- 抽屜頂部 -->
+        <div class="p-5 border-b border-white/10 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-bag-shopping text-brand-accent"></i>
+            <h2 class="text-base font-bold text-white">莊園提袋 (<span x-text="totalCartCount"></span>)</h2>
+          </div>
+          <button @click="cartOpen = false" class="text-slate-400 hover:text-white">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- 提袋清單 -->
+        <div class="flex-grow overflow-y-auto p-5 space-y-4">
+          <template x-if="cart.length === 0">
+            <div class="text-center py-20 text-brand-muted">
+              <i class="fa-solid fa-basket-shopping text-4xl mb-3 opacity-40"></i>
+              <p class="text-sm">購物提袋目前空空如也</p>
+              <button @click="cartOpen = false" class="mt-4 px-4 py-2 rounded-full bg-white/10 text-brand-accent text-xs font-bold hover:bg-white/20">
+                立即前往挑選
+              </button>
+            </div>
+          </template>
+
+          <template x-for="(item, index) in cart" :key="index">
+            <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
+              <img :src="item.image" :alt="item.name" class="w-16 h-16 rounded-lg object-cover bg-slate-900 border border-white/10">
+              
+              <div class="flex-grow min-w-0">
+                <h4 class="text-xs font-bold text-white truncate" x-text="item.name"></h4>
+                <p x-show="item.variant" class="text-[11px] text-brand-muted" x-text="`規格: ${item.variant}`"></p>
+                <div class="text-xs text-brand-accent font-bold mt-1">
+                  NT$ <span x-text="item.price"></span>
+                </div>
+              </div>
+
+              <!-- 數量增減 -->
+              <div class="flex items-center space-x-1.5">
+                <button @click="updateCartQty(index, -1)" class="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs">
+                  <i class="fa-solid fa-minus text-[10px]"></i>
+                </button>
+                <span class="w-6 text-center text-xs font-bold text-white" x-text="item.qty"></span>
+                <button @click="updateCartQty(index, 1)" class="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                </button>
+              </div>
+
+              <button @click="removeFromCart(index)" class="text-slate-500 hover:text-rose-400 p-1">
+                <i class="fa-regular fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </template>
+        </div>
+
+        <!-- 抽屜結算底欄 -->
+        <div class="p-5 border-t border-white/10 bg-slate-950/40 space-y-3" x-show="cart.length > 0">
+          <div class="flex justify-between text-xs text-slate-300">
+            <span>商品小計</span>
+            <span class="font-bold">NT$ <span x-text="cartSubtotal"></span></span>
+          </div>
+          
+          <div class="flex justify-between text-xs text-slate-300">
+            <span>運費計算</span>
+            <span class="font-bold" x-text="cartShippingFee === 0 ? '免運費' : 'NT$ ' + cartShippingFee"></span>
+          </div>
+
+          <div x-show="cartSubtotal < 2000" class="text-[11px] text-amber-300 bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+            滿 NT$ 2,000 即享免運！還差 NT$ <span x-text="2000 - cartSubtotal"></span>
+          </div>
+
+          <div class="border-t border-white/10 pt-2 flex justify-between items-baseline text-white">
+            <span class="text-sm font-bold">訂單總額</span>
+            <span class="text-2xl font-black text-brand-accent">NT$ <span x-text="cartFinalTotal"></span></span>
+          </div>
+
+          <!-- LINE 快速訂購或結帳按鈕 -->
+          <button @click="checkoutViaLine()" 
+                  class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-all">
+            <i class="fa-brands fa-line text-lg"></i>
+            <span>以 LINE 專人快速送單結帳</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 頁尾 (Footer) ================= -->
+  <footer class="border-t border-white/10 bg-[#07191a] text-slate-400 text-xs py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- 品牌簡介 -->
+      <div class="space-y-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-brand-accent to-emerald-400">
+            <img src="https://raw.githubusercontent.com/doraemon770101/github.io/main/images/PS%E7%B6%B2%E9%A0%81%E9%A6%96%E5%9C%96.JPG" class="w-full h-full object-cover rounded-full" alt="PS Logo">
+          </div>
+          <span class="text-white font-bold text-base">P.S健康莊園 HEALTH MANOR</span>
+        </div>
+        <p class="leading-relaxed text-[11px] text-slate-400">
+          HEALTHY & NATURAL LIFE<br>
+          堅持嚴選歐美專業醫療生技與個人健康護理品項，提供每一位顧客純淨、安心且具科學實證的健康體驗。
+        </p>
+      </div>
+
+      <!-- 廠商與法規登錄 -->
+      <div class="space-y-2">
+        <h4 class="text-white font-bold text-sm mb-3">廠商與營業登記資訊</h4>
+        <p>醫療器材商名稱：宸睿生醫有限公司</p>
+        <p>營業地址：臺北市萬華區康定路116號7樓之4</p>
+        <p>醫療器材商許可證：北市衛器販（萬）字第MD6201098413號</p>
+        <p>食品許可執照：北市衛食藥字第11530229299號</p>
+      </div>
+
+      <!-- 客服與諮詢專線 -->
+      <div class="space-y-2">
+        <h4 class="text-white font-bold text-sm mb-3">專業諮詢與客戶服務</h4>
+        <p><i class="fa-solid fa-phone text-brand-accent mr-2"></i>諮詢專線：0966-087-237</p>
+        <p><i class="fa-solid fa-clock text-brand-accent mr-2"></i>服務時間：週一至週五 09:30 - 18:30</p>
+        <p class="text-[11px] text-amber-200/70 pt-2">
+          ※ 消費者使用前應詳閱產品說明書及醫療器材標籤。
+        </p>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pt-6 border-t border-white/5 text-center text-[11px] text-slate-500">
+      © 2026 P.S健康莊園 HEALTH MANOR. 版權所有。
+    </div>
+  </footer>
+
+  <!-- ================= Alpine.js 核心資料與互動邏輯 ================= -->
+  <script>
+    function storeData() {
+      // 賽吉兒 5 張特色衛教宣傳圖
+      const saugellaCommonImages = [
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0395.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0394.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0393.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0392.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0391.jpeg'
+      ];
+
+      return {
+        searchQuery: '',
+        currentCategory: 'all',
+        modalOpen: false,
+        cartOpen: false,
+        activeModalProduct: null,
+        modalActiveImage: '',
+        cart: [],
+
+        categories: [
+          { id: 'all', name: '全部商品' },
+          { id: 'women', name: '私密清潔／婦女保養' },
+          { id: 'medical_care', name: '醫療照護 (醫材)' },
+          { id: 'healthcare', name: '營養保健食品' },
+          { id: 'assistive', name: '輔具專區' }
+        ],
+
+        products: [
+          // 1. 賽吉兒日用型
+          {
+            id: 1,
+            category: 'women',
+            tag: '日常防護・鼠尾草菁萃',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [日用型]',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399%202.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0397.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '天天使用維持私密肌自然酸鹼平衡。天然鼠尾草菁萃與乳酸配方，質地溫和清新。',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '100ml', price: 220, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399.JPG' },
+              { label: '250ml', price: 420, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399%202.JPG' },
+              { label: '500ml', price: 720, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0397.JPG' }
+            ],
+            detail: `天天使用維持私密肌自然酸鹼平衡。\n天然鼠尾草菁萃與乳酸配方，洗淨異味與黏膩感，帶來一整天的清新自信。`
+          },
+          // 2. 賽吉兒加強型
+          {
+            id: 2,
+            category: 'women',
+            tag: '特殊時期・百里香菁萃',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [加強型]',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0400.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0400.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0398.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '生理期、懷孕期、產後或運動後專用。百里香菁萃加倍防護，提升私密肌抵禦力。',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '100ml', price: 260, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0400.JPG' },
+              { label: '250ml', price: 480, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0398.JPG' },
+              { label: '500ml', price: 820, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0398.JPG' }
+            ],
+            detail: `經期前後、運動流汗、泡湯旅遊及孕期產後最佳選擇。蘊含天然百里香菁萃，深層淨護。`
+          },
+          // 3. 賽吉兒潤澤型
+          {
+            id: 3,
+            category: 'women',
+            tag: '深層水嫩・燕麥萃取',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [潤澤型] 200ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0401.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0401.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '針對乾燥敏弱私密肌設計，燕麥萃取深度補水，洗後柔嫩不乾澀。',
+            price: 450,
+            buyQty: 1,
+            detail: `特別適合換季乾燥或易乾澀體質，溫和滋潤洗感，給私密肌溫柔的水潤修護。`
+          },
+          // 4. 賽吉兒涼感型
+          {
+            id: 4,
+            category: 'women',
+            tag: '沁涼薄荷・酷夏必備',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [涼感型] 200ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0404.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0404.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '微涼薄荷配方，迅速帶走悶熱悶痛感，夏季炎熱或生理期必備救星。',
+            price: 450,
+            buyQty: 1,
+            detail: `微涼溫和不刺激，掃除黏膩悶熱感，洗後感受如沐微風般的極致舒適。`
+          },
+          // 5. 賽吉兒少女型
+          {
+            id: 5,
+            category: 'women',
+            tag: '初經少女・棉花萃取',
+            name: '【SAUGELLA 賽吉兒】潔浴凝露 [少女型] 200ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0403.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0403.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '3歲以上幼童及青少女日常私密清潔。棉花籽精華溫柔呵護稚嫩膚質。',
+            price: 420,
+            buyQty: 1,
+            detail: `專為青春期少女與幼童敏弱肌量身訂製，無色素、無刺激，建立良好私密沐浴習慣。`
+          },
+          // 6. 賽吉兒逆齡型
+          {
+            id: 6,
+            category: 'women',
+            tag: '熟齡修護・玻尿酸滋養',
+            name: '【SAUGELLA 賽吉兒】菁萃婦潔凝露 [逆齡型] 250ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0402.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0402.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '熟齡更年期女性專用。玻尿酸與天然植萃複方，舒緩肌膚萎縮乾燥不適。',
+            price: 510,
+            buyQty: 1,
+            detail: `特別推薦給 45 歲以上／熟齡女性使用。蘊含玻尿酸及植物菁萃，深層舒緩乾薄纖細的私密肌。`
+          },
+          // 7. 賽吉兒柔嫩乳霜
+          {
+            id: 7,
+            category: 'women',
+            tag: '滋養水潤・日夜防護',
+            name: '【SAUGELLA 賽吉兒】菁萃柔嫩乳霜 30ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.06%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.06%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.06%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F%20(1).png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.02%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              ...saugellaCommonImages
+            ],
+            desc: '沐浴後專用潤澤乳霜，鎖住水分，告別摩擦與乾燥粗糙。',
+            price: 580,
+            buyQty: 1,
+            detail: `針對私密外陰肌膚乾燥不適設計，質地輕盈柔滑好吸收，建立肌膚天然保護膜。`
+          },
+          // 8. 賽吉兒高效修護保濕凝膠
+          {
+            id: 8,
+            category: 'women',
+            tag: '密集補水・加強修護',
+            name: '【SAUGELLA 賽吉兒】高效修護保濕凝膠 [加強型] 30ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%888.59%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%888.59%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.00%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.01%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F%20(2).png',
+              ...saugellaCommonImages
+            ],
+            desc: '清爽凝膠質地，迅速滲透修護，提升私密肌含水量與彈性。',
+            price: 650,
+            buyQty: 1,
+            detail: `高濃度水感修護配方，溫和無刺激，適合乾燥緊繃時日常保養。`
+          },
+
+          // 20. 醫療器材：法國優潔疤痕凝膠
+          {
+            id: 20,
+            category: 'medical_care',
+            tag: '第一等級醫材・法國原裝',
+            name: '【法國疤痕護理凝膠】優潔 EUROGEL PLUS GEL 20g',
+            discountBadge: '滿3件每件優惠NT$2500',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%B0%81%E9%9D%A2.png',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%B0%81%E9%9D%A2.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%85%A7%E9%A0%811.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%85%A7%E9%A0%812.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%85%A7%E9%A0%813.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%85%A7%E9%A0%814.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%85%A7%E9%A0%815.png'
+            ],
+            desc: '法國原裝進口、醫學中心指定使用！添加矽膠與維生素E協同修護，速乾清爽不油膩。滿3件享優惠每件NT$2500。',
+            price: 2800,
+            buyQty: 1,
+            bulkDiscount: { minQty: 3, fixedPrice: 2500, label: '已享多件優惠 NT$2500/件' },
+            detail: `【優潔疤痕護理凝膠 EUROGEL PLUS GEL 20g】
+(本品屬衛生署核准之第一等級醫療器材，衛署醫器輸壹字第007862號)
+容量：20 g
+
+【產品特色】
+➣ 法國原裝進口，通過歐盟認證。
+➣ 國內多家醫學中心及診所指定使用。
+➣ 添加維生素E，與矽膠具協同作用，有效防護及修護疤痕。
+➣ 快速乾爽滑順無油膩感，使用後不影響上妝。
+➣ 具高度延展性，輕輕塗抹即可均勻覆蓋在已癒合傷口處。
+
+【注意事項】
+➣ 適合使用在外科手術後及外傷縫合、剖腹產傷口、預防及改善肥厚型疤痕及蟹足腫。
+➣ 建議每日早晚塗抹，持續使用 2-4 個月。
+➣ 優潔僅能外用，開放性（無法縫合）傷口、未癒合的傷口、浸潤性的組織、口腔內不得使用，如有疑問請先諮詢專業醫事人員。
+➣ 不可和其他皮膚外用藥物合併使用。
+
+【商品規格與醫療器材許可】
+1、商品組合/規格：恩特斯 優潔 疤痕護理凝膠 / 一盒 20 g
+2、醫療器材許可證：
+➣ 核定品名：優潔 疤痕護理凝膠
+➣ 核准字號：衛署醫器輸壹字第007862號
+➣ 藥商名稱：登偉生技顧問有限公司
+➣ 製造廠名稱：法國 M-technologies
+
+【廠商與法定標示資訊】
+◆ 醫療材商名稱：宸睿生醫有限公司
+◆ 醫療材商地址：臺北市萬華區康定路116號7樓之4
+◆ 醫療材商許可證字號：北市衛器販（萬）字第MD6201098413號
+◆ 醫療材商諮詢專線：0966-087-237
+◆「消費者使用前應詳閱醫療器材說明書」
+
+◆ 特惠方案：單盒 NT$ 2,800，購買 3 盒以上每件優惠價 NT$ 2,500！`
+          },
+
+          // 11. 營養保健：Infloran 益腹寧
+          {
+            id: 11,
+            category: 'healthcare',
+            tag: '醫療級雙益生菌・整腸調理',
+            name: '【Infloran 益腹寧】膠囊 (20顆)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E7%9B%8A%E8%85%B9%E5%AF%A7%E5%B0%81%E9%9D%A2.jpeg',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E7%9B%8A%E8%85%B9%E5%AF%A7%E5%B0%81%E9%9D%A2.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E7%9B%8A%E8%85%B9%E5%AF%A7%E5%85%A7%E9%A0%81.jpeg'
+            ],
+            desc: '瑞士進口醫療級益生菌。雙歧桿菌與嗜酸乳桿菌黃金組合，維持消化道健康與菌叢平衡。',
+            price: 680,
+            buyQty: 1,
+            detail: `瑞士進口專利雙歧桿菌與乳桿菌，活菌耐酸直達腸道，適合全家人每日消化道日常調理保養。`
+          },
+
+          // 12. 營養保健：萊基力 MyoCol
+          {
+            id: 12,
+            category: 'healthcare',
+            tag: '德國專利胜肽・靈活肌力',
+            name: '【德國膠原蛋白胜肽】萊基力 MyoCol (30包)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E8%90%8A%E8%82%8C%E5%8A%9B.jpg',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E8%90%8A%E8%82%8C%E5%8A%9B.jpg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E8%90%8A%E8%82%8C%E5%8A%9B%E5%85%A7%E9%A0%812.jpg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E8%90%8A%E8%82%8C%E5%8A%9B%E5%85%A7%E9%A0%813.jpg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E8%90%8A%E8%82%8C%E5%8A%9B%E5%85%A7%E9%A0%81.jpg'
+            ],
+            desc: '德國 GELITA 原廠專利水解膠原蛋白胜肽，分子小易吸收，行動靈活與肌肉力量最佳後盾。',
+            price: 2200,
+            buyQty: 1,
+            detail: `德國專業專利水解製程，小分子胜肽好吸收，針對運動族群與熟齡長輩提供關鍵行動力支撐。`
+          },
+
+          // 13. 營養保健：德國新保力能
+          {
+            id: 13,
+            category: 'healthcare',
+            tag: '21種關鍵營養・好吞服軟膠囊',
+            name: '【德國綜合維他命】新保力能 軟膠囊 (100粒/瓶)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E6%96%B0%E4%BF%9D%E5%8A%9B%E8%83%BD%E5%B0%81%E9%9D%A2.jpg',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E6%96%B0%E4%BF%9D%E5%8A%9B%E8%83%BD%E5%B0%81%E9%9D%A2.jpg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E6%96%B0%E4%BF%9D%E5%8A%9B%E8%83%BD%E5%85%A7%E9%A0%81.jpg'
+            ],
+            desc: '備孕及孕期最推薦！最高標準德國藥廠製造，銷售超過45年，含焦磷酸鐵與21種完整維生素礦物質。',
+            price: 1700,
+            buyQty: 1,
+            detail: `【準備懷孕的第一步 替媽媽打好基礎】
+► 富含 21 種營養素，滿足每一階段營養需求
+► 最高標準德國藥廠製造，安全有保障
+► 德國進口孕婦維他命，銷售超過 45 年，專業人士最推薦的維他命補充
+
+【不刺激、無負擔的軟膠囊封裝】
+特殊德國軟膠囊封裝，具有好吞食和無異味的特性，能把膠囊裡的養分直送小腸吸收，減少胃部刺激。
+
+【葉酸搭配 B12、B1、B2、B3、B6、B9】
+維持胎兒正常生長與發育。
+
+【溫和好吸收的鐵劑】
+使用焦磷酸鐵，不但安全、含鐵量高，而且不會影響腸胃消化。更添加維生素C促進鐵吸收。
+
+【完整 21 種營養素和礦物質】
+維生素B群、生物素、葉酸、維生素C/D2/E、A、胡蘿蔔素；礦物質鎂、鈣、鉻、錳、鐵、銅、鋅、碘。
+
+◆ 醫療材商名稱：宸睿生醫有限公司
+◆ 醫療器材商地址：臺北市萬華區康定路116號7樓之4
+◆ 醫療材商諮詢專線：0966-087-237
+◆ 食品許可執照字號：北市衛食藥字第11530229299號
+◆ 食品業者登入字號：A-162140239-00000-5
+◆「消費者使用前應詳閱食用說明書」`
+          },
+
+          // 15. 營養保健：西班牙液態魚油 優粹源 Petit Pur3 Omega-3
+          {
+            id: 15,
+            category: 'healthcare',
+            tag: '西班牙頂級液態・高純度Omega-3',
+            name: '【西班牙液態魚油】優粹源 Petit Pur3 Omega-3 (200ml)',
+            discountBadge: '滿3件每件優惠NT$2550',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%B0%81%E9%9D%A2.png',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%B0%81%E9%9D%A2.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%81.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%811.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%812.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%813.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%814.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%815.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%816.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B2%B9%E6%BA%90%E5%85%A7%E9%A0%817.png'
+            ],
+            desc: '西班牙頂級液態魚油配方，高濃度天然純淨 Omega-3，液態好吸收無魚腥味。滿3件享優惠每瓶NT$2550。',
+            price: 2800,
+            buyQty: 1,
+            bulkDiscount: { minQty: 3, fixedPrice: 2550, label: '已享多件優惠 NT$2550/瓶' },
+            detail: `【西班牙液態魚油 優粹源 Petit Pur3 Omega-3 (200ml)】
+
+◆ 頂級西班牙高純度液態魚油，好吸收無腥味。
+◆ 嚴選純淨深海小型魚種，富含天然高活性 Omega-3 脂肪酸。
+
+◆ 醫療材商名稱：宸睿生醫有限公司
+◆ 醫療療材商地址：臺北市萬華區康定路116號7樓之4
+◆ 醫療材商諮詢專線：0966-087-237
+◆ 食品許可執照字號：北市衛食藥字第11530229299號
+◆ 食品業者登入字號：A-162140239-00000-5
+◆「消費者使用前應詳閱食用說明書」
+
+◆ 特惠方案：單瓶 NT$ 2,800，購買 3 瓶以上每瓶優惠價 NT$ 2,550！`
+          },
+
+          // 16. 營養保健：加拿大D3 優寶滴 LiquiD P&B
+          {
+            id: 16,
+            category: 'healthcare',
+            tag: '加拿大原裝・每滴400IU',
+            name: '【加拿大D3】高濃縮天然維生素D3 優寶滴- LiquiD P&B (5mL)',
+            discountBadge: '滿3件每件優惠NT$1600',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E5%AF%B6%E6%BB%B4%E5%B0%81%E9%9D%A2.png',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E5%AF%B6%E6%BB%B4%E5%B0%81%E9%9D%A2.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E5%AF%B6%E6%BB%B4%E5%85%A7%E9%A0%81.jpg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E5%AF%B6%E6%BB%B4%E5%85%A7%E9%A0%811.jpg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E5%AF%B6%E6%BB%B4%E5%85%A7%E9%A0%812.jpg'
+            ],
+            desc: '每一滴含 400IU 天然維生素D3，有效增進鈣吸收，幫助骨骼與牙齒的生長發育。滿3件享優惠每瓶NT$1600。',
+            price: 1900,
+            buyQty: 1,
+            bulkDiscount: { minQty: 3, fixedPrice: 1600, label: '已享多件優惠 NT$1600/件' },
+            detail: `【加拿大D3 高濃縮天然維生素D3 優寶滴- LiquiD P&B (5mL)】
+
+◆ 維生素D 有效增進鈣吸收
+◆ 幫助骨骼與牙齒的生長發育
+◆ 每一滴含 400IU 高濃縮天然維生素D3
+
+◆ 醫療材商名稱：宸睿生醫有限公司
+◆ 醫療療材商地址：臺北市萬華區康定路116號7樓之4
+◆ 醫療材商諮詢專線：0966-087-237
+◆ 食品許可執照字號：北市衛食藥字第11530229299號
+◆ 食品業者登入字號：A-162140239-00000-5
+◆「消費者使用前應詳閱使用說明書」
+
+◆ 特惠方案：單瓶 NT$ 1,900，購買 3 件以上每瓶優惠價 NT$ 1,600！`
+          },
+
+          // 17. 營養保健：加拿大K2 優納康 Menatok-Vitamin K2
+          {
+            id: 17,
+            category: 'healthcare',
+            tag: '素食可食・每滴50μg K2',
+            name: '【加拿大K2】優納康 Menatok-Vitamin K2 (10ml/瓶 50μg/Drop)',
+            discountBadge: '滿3罐每罐優惠NT$2400',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%B0%81%E9%9D%A2.jpg',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%B0%81%E9%9D%A2.jpg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%85%A7%E9%A0%81.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%85%A7%E9%A0%811.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%85%A7%E9%A0%812.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%85%A7%E9%A0%813.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%85%A7%E9%A0%814.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%85%A7%E9%A0%815.jpg'
+            ],
+            desc: '【素食可食】每滴含 50 微克天然維生素 K2，10ml 含量至少 356 滴。滿3罐享優惠每罐NT$2400。',
+            price: 2900,
+            buyQty: 1,
+            bulkDiscount: { minQty: 3, fixedPrice: 2400, label: '已享多件優惠 NT$2400/罐' },
+            detail: `【優納康 Menatok-Vitamin K2】素食可食
+・規格：3.34ml / 10ml
+
+【容量與含量標示】
+➣ 3.34ml：
+每瓶含量至少 120 滴
+每滴含 50 微克的天然維生素 K2
+整瓶含維生素 K2 約 6,000 微克
+
+➣ 10ml：
+每瓶含量至少 356 滴
+每滴含 50 微克的天然維生素 K2
+整瓶含維生素 K2 約 17,800 微克
+
+◆ 醫療材商名稱：宸睿生醫有限公司
+◆ 醫療療材商地址：臺北市萬華區康定路116號7樓之4
+◆ 醫療材商諮詢專線：0966-087-237
+◆ 食品許可執照字號：北市衛食藥字第11530229299號
+◆ 食品業者登入字號：A-162140239-00000-5
+◆「消費者使用前應詳閱食用說明書」
+
+◆ 特惠方案：單罐 NT$ 2,900，購買 3 罐以上每罐優惠價 NT$ 2,400！`
+          },
+
+          // 30. 輔具專區：Elife 原廠旋鈕固定式護手腕
+          {
+            id: 30,
+            category: 'assistive',
+            tag: '醫材護具・旋鈕加壓',
+            name: '【Elife 原廠】旋鈕固定式護手腕 (拇指支撐/無拇指)',
+            desc: 'BOA微調旋鈕輕鬆穿脫與固定，提供手腕與關節穩定包覆與舒適支撐。提供 S、M、L、XL 尺寸選擇。',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0659.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0630%202.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0633.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0655.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0637.JPG'
+            ],
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '拇指支撐款 - S', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' },
+              { label: '拇指支撐款 - M', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' },
+              { label: '拇指支撐款 - L', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' },
+              { label: '拇指支撐款 - XL', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' },
+              { label: '無拇指款 - S', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0630%202.JPG' },
+              { label: '無拇指款 - M', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0630%202.JPG' },
+              { label: '無拇指款 - L', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0630%202.JPG' },
+              { label: '無拇指款 - XL', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0630%202.JPG' }
+            ],
+            detail: `【Elife原廠 旋鈕固定式 拇指支撐 / 無拇指 護手腕】
+微調旋鈕加壓設計，能精準調節貼合度與包覆感，提供手腕顯著的固定與舒適支撐。
+
+◆ 尺寸規格（S / M / L / XL）：
+・拇指支撐款：S、M、L、XL (NT$ 3,500)
+・無拇指款：S、M、L、XL (NT$ 3,500)
+
+◆ 醫療器材登錄與製造標示：
+・登錄字號：衛部陸輸壹登字第004234號
+・效能/用途：限醫療器材分類分級管理辦法「肢體裝具（O.3475）」第一等級鑑別範圍。
+・登錄者：億萊富國際股份有限公司
+・登錄者地址：新北市永和區保生路1號7樓
+・製造業者：ZHANGPU ORTHOLIFE REHABILITATION CO., LTD.
+・製造業者地址：SUI-AN INDUSTRY PARK, ZHANGPU COUNTY, ZHANGZHOU CITY, CHINA
+
+◆ 主要成分：
+尼龍、鋁、聚酯纖維、聚丙烯等材料（詳見外包裝標示）
+
+◆ 清潔說明：
+・在冷水中用溫和的洗滌劑手洗。
+・不要乾洗和烘乾。
+・自然晾乾，並且不要將該護具暴露在任何熱源中。`
+          },
+
+          // 31. 輔具專區：Ottobock 氣壓式步行器
+          {
+            id: 31,
+            category: 'assistive',
+            tag: '專業醫療輔具・氣壓固定',
+            isOttobock: true,
+            discountBadge: '限宅配/免運',
+            name: '【Ottobock 奧托博克】氣壓式步行器 (短/長)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0429.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0430.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0444.jpeg'
+            ],
+            desc: '德國 Ottobock 國際大廠研發！適用運動與工作傷害固定防護，左右腳通用。［本商品限定宅配免運］',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '短筒 S (歐碼 36-38)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' },
+              { label: '短筒 M (歐碼 39-42)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' },
+              { label: '短筒 L (歐碼 43-46)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' },
+              { label: '長筒 S (歐碼 36-38)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' },
+              { label: '長筒 M (歐碼 39-42)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' },
+              { label: '長筒 L (歐碼 43-46)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' },
+              { label: '長筒 XL (歐碼 47+)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' }
+            ],
+            detail: `【Ottobock 奧托博克 氣壓式步行器 (短/長)】
+德國輔具領導品牌 Ottobock 專為成人設計的專業護具與固定支撐裝備。
+
+◆ 尺寸對照：
+・S 號: 歐碼 36-38
+・M 號: 歐碼 39-42
+・L 號: 歐碼 43-46
+・XL 號: 歐碼 47+
+
+◆ 配送說明：本商品體積較大，限用宅配到府（享全單免運費）。
+
+◆ 醫療器材許可與標示資訊：
+・許可證字號：衛部醫器陸輸醫登字第 002719號
+・製造商名稱：Rison Medical Limited
+・製造商地址：ZHOUHAN VILLAGE, JIANGSHAN TOWN, YINZHOU NINGBO, ZHEJIANG PROVINCE, CHINA. 315195
+・進口藥商：香港商奥托博克亞洲太平洋有限公司台灣分公司
+・藥商地址：台北市大同區承德路二段215號5樓之1
+・藥商電話：（02）2553-5165
+・效能：用於支撐或防止肢體變形之醫療器材裝具
+・警語：使用本產品如有不適，請停止使用，並請教醫師`
+          },
+
+          // 32. 輔具專區：Ottobock 專業醫療短背架
+          {
+            id: 32,
+            category: 'assistive',
+            tag: '專業醫療輔具・腰軀固定',
+            isOttobock: true,
+            discountBadge: '限宅配/免運',
+            name: '【Ottobock 奧托博克】專業醫療短背架 (LSO)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0744.jpeg',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0744.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0741.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0740.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0719.jpeg',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0718.jpeg'
+            ],
+            desc: '德國 Ottobock 國際大廠！適用術後、運動及工作腰部防護與支撐，背板高度 25.0cm。［本商品限定宅配免運］',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: 'S (50R233=S / 腰圍 63.5-76.0cm)', price: 7300, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0744.jpeg' },
+              { label: 'M (50R233=M / 腰圍 76.0-89.0cm)', price: 7300, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0744.jpeg' },
+              { label: 'XL (50R233=XL / 腰圍 101.5-114.5cm)', price: 7300, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0744.jpeg' },
+              { label: 'XXL (50R233=XXL / 腰圍 114.5-127.0cm)', price: 7300, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0744.jpeg' },
+              { label: 'XXXL (50R233=XXXL / 腰圍 127.0-140.0cm)', price: 7300, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0744.jpeg' }
+            ],
+            detail: `【Ottobock 奧托博克 專業醫療短背架】
+德國輔具領導品牌 Ottobock 專為成人設計之醫療級短背架，提供腰椎及軀幹強固加壓與穩固支撐。
+
+◆ 適應症與預期用途 (Indications)：
+・術後恢復與防護 (Post-operative)
+・運動、休閒活動及工作引起之腰部傷害 (Injury during sports, recreation and work)
+・腰軀穩定加壓與軀幹固定 (Bracing & Support)
+
+◆ 尺寸規格與對照表 (背板高度 Panel height rear: 25.0 cm)：
+・S 號 (型號 50R233=S): 適合腰圍 63.5 cm - 76.0 cm
+・M 號 (型號 50R233=M): 適合腰圍 76.0 cm - 89.0 cm
+・XL 號 (型號 50R233=XL): 適合腰圍 101.5 cm - 114.5 cm
+・XXL 號 (型號 50R233=XXL): 適合腰圍 114.5 cm - 127.0 cm
+・XXXL 號 (型號 50R233=XXXL): 適合腰圍 127.0 cm - 140.0 cm
+
+◆ 配送說明：本商品屬 Ottobock 專業醫療輔具，限用宅配到府（享有全單宅配免運費優惠）。
+
+◆ 醫療器材許可與標示資訊：
+・許可證字號：衛部醫器陸輸醫登字第 002719號
+・製造商名稱：Rison Medical Limited
+・製造商地址：ZHOUHAN VILLAGE, JIANGSHAN TOWN, YINZHOU NINGBO, ZHEJIANG PROVINCE, CHINA. 315195
+・進口藥商：香港商奥托博克亞洲太平洋有限公司台灣分公司
+・藥商地址：台北市大同區承德路二段215號5樓之1
+・效能：用於支撐或防止肢體變形之醫療器材裝具`
+          }
+        ],
+
+        // 依分類與關鍵字篩選
+        get filteredProducts() {
+          return this.products.filter(p => {
+            const matchesCategory = (this.currentCategory === 'all') || (p.category === this.currentCategory);
+            const matchesQuery = !this.searchQuery || 
+              p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+              p.desc.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+              p.tag.toLowerCase().includes(this.searchQuery.toLowerCase());
+            return matchesCategory && matchesQuery;
+          });
+        },
+
+        getCategoryCount(catId) {
+          if (catId === 'all') return this.products.length;
+          return this.products.filter(p => p.category === catId).length;
+        },
+
+        getCurrentProductImage(product) {
+          if (product.variants && product.variants.length > 0) {
+            const idx = product.selectedVariantIndex || 0;
+            return product.variants[idx]?.image || product.image;
+          }
+          return product.image;
+        },
+
+        getProductUnitPrice(product) {
+          if (product.variants && product.variants.length > 0) {
+            const idx = product.selectedVariantIndex || 0;
+            return product.variants[idx]?.price || product.price;
+          }
+          return product.price;
+        },
+
+        isProductDiscountActive(product) {
+          if (!product || !product.bulkDiscount) return false;
+          const qty = product.buyQty || 1;
+          return qty >= product.bulkDiscount.minQty;
+        },
+
+        getProductEffectiveUnitPrice(product) {
+          const unit = this.getProductUnitPrice(product);
+          if (this.isProductDiscountActive(product)) {
+            if (product.bulkDiscount.fixedPrice) return product.bulkDiscount.fixedPrice;
+            if (product.bulkDiscount.rate) return Math.round(unit * product.bulkDiscount.rate);
+          }
+          return unit;
+        },
+
+        getProductRawTotal(product) {
+          const qty = product.buyQty || 1;
+          return this.getProductUnitPrice(product) * qty;
+        },
+
+        getProductCalculatedTotal(product) {
+          const qty = product.buyQty || 1;
+          return this.getProductEffectiveUnitPrice(product) * qty;
+        },
+
+        selectVariant(product, index) {
+          product.selectedVariantIndex = index;
+          if (this.activeModalProduct && this.activeModalProduct.id === product.id) {
+            this.modalActiveImage = product.variants[index]?.image || product.image;
+          }
+        },
+
+        changeBuyQty(product, change) {
+          let qty = (product.buyQty || 1) + change;
+          if (qty < 1) qty = 1;
+          product.buyQty = qty;
+        },
+
+        openModal(product) {
+          this.activeModalProduct = product;
+          this.modalActiveImage = this.getCurrentProductImage(product);
+          this.modalOpen = true;
+        },
+
+        addToCart(product) {
+          const qty = product.buyQty || 1;
+          let variantLabel = '';
+          let unitPrice = product.price;
+          let currentImg = product.image;
+
+          if (product.variants && product.variants.length > 0) {
+            const idx = product.selectedVariantIndex || 0;
+            variantLabel = product.variants[idx].label;
+            unitPrice = product.variants[idx].price;
+            currentImg = product.variants[idx].image || currentImg;
+          }
+
+          const existingIndex = this.cart.findIndex(item => item.id === product.id && item.variant === variantLabel);
+
+          if (existingIndex > -1) {
+            this.cart[existingIndex].qty += qty;
+          } else {
+            this.cart.push({
+              id: product.id,
+              name: product.name,
+              variant: variantLabel,
+              originalPrice: unitPrice,
+              price: unitPrice,
+              image: currentImg,
+              qty: qty,
+              isOttobock: !!product.isOttobock,
+              bulkDiscount: product.bulkDiscount ? { ...product.bulkDiscount } : null
+            });
+          }
+
+          this.recalculateCartPrices();
+          this.cartOpen = true;
+        },
+
+        recalculateCartPrices() {
+          this.cart.forEach(item => {
+            if (item.bulkDiscount && item.qty >= item.bulkDiscount.minQty) {
+              if (item.bulkDiscount.fixedPrice) {
+                item.price = item.bulkDiscount.fixedPrice;
+              } else if (item.bulkDiscount.rate) {
+                item.price = Math.round(item.originalPrice * item.bulkDiscount.rate);
+              }
+            } else if (item.originalPrice) {
+              item.price = item.originalPrice;
+            }
+          });
+        },
+
+        updateCartQty(index, change) {
+          this.cart[index].qty += change;
+          if (this.cart[index].qty <= 0) {
+            this.cart.splice(index, 1);
+          } else {
+            this.recalculateCartPrices();
+          }
+        },
+
+        removeFromCart(index) {
+          this.cart.splice(index, 1);
+        },
+
+        get totalCartCount() {
+          return this.cart.reduce((sum, item) => sum + item.qty, 0);
+        },
+
+        get hasOttobock() {
+          return this.cart.some(item => item.isOttobock);
+        },
+
+        get cartSubtotal() {
+          return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        },
+
+        get cartShippingFee() {
+          if (this.cart.length === 0) return 0;
+          // 含 Ottobock 輔具或滿 NT$ 2,000 即享免運
+          if (this.hasOttobock) return 0;
+          return this.cartSubtotal >= 2000 ? 0 : 100;
+        },
+
+        get cartFinalTotal() {
+          return this.cartSubtotal + this.cartShippingFee;
+        },
+
+        checkoutViaLine() {
+          if (this.cart.length === 0) return;
+          let msg = `【P.S健康莊園】官方線上訂單需求：%0A`;
+          this.cart.forEach((item, idx) => {
+            msg += `${idx + 1}. ${item.name} ${item.variant ? '(' + item.variant + ')' : ''} x ${item.qty} (單價 NT$${item.price})%0A`;
+          });
+          msg += `----------------------------%0A`;
+          msg += `商品小計：NT$ ${this.cartSubtotal}%0A`;
+          msg += `運費：NT$ ${this.cartShippingFee}%0A`;
+          msg += `訂單總金額：NT$ ${this.cartFinalTotal}%0A`;
+          msg += `%0A請專人協助確認訂單與配送收件資訊，謝謝！`;
+          
+          window.open(`https://line.me/R/msg/text/?${msg}`, '_blank');
+        }
+      }
+    }
+  </script>
+</body>
+</html>
