@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P.S健康莊園 HEALTH MANOR - 官方線上旗艦館</title>
+
+  <!-- PWA & Meta Tags -->
+  <meta name="theme-color" content="#0A2526">
+  <meta name="msapplication-TileColor" content="#0A2526">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="P.S健康莊園">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 6 圖標庫 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts: Noto Sans TC & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <!-- Alpine.js 核心框架 -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#0A2526',
+              card: '#0f3234',
+              primary: '#0D6E6E',
+              accent: '#E5C467',
+              hover: '#D4B152',
+              accentLight: '#F3DE9C',
+              text: '#F1F5F9',
+              muted: '#8CA3A0',
+              border: 'rgba(229, 196, 103, 0.2)'
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0A2526;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #194a4c;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #E5C467;
+    }
+
+    body {
+      background-color: #0A2526;
+      color: #E2E8F0;
+      font-family: 'Noto Sans TC', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .hover-gradient-card {
+      background-color: #0f3234;
+      border: 1px solid rgba(229, 196, 103, 0.15);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hover-gradient-card:hover {
+      background: linear-gradient(145deg, #134244 0%, #1a5658 50%, #0d3637 100%);
+      border-color: rgba(229, 196, 103, 0.6);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(229, 196, 103, 0.15);
+    }
+
+    .btn-hover-gradient {
+      transition: all 0.3s ease;
+    }
+    .btn-hover-gradient:hover {
+      background: linear-gradient(135deg, #E5C467 0%, #d4b050 50%, #10b981 100%);
+      color: #071d1e;
+      box-shadow: 0 4px 15px rgba(229, 196, 103, 0.35);
+      border-color: transparent;
+    }
+  </style>
+</head>
+<body x-data="storeData()" class="relative min-h-screen flex flex-col justify-between selection:bg-brand-accent selection:text-slate-900">
+
+  <!-- ================= 頂部導覽列 (Navbar) ================= -->
+  <header class="sticky top-0 z-40 bg-[#0A2526]/95 backdrop-blur-md border-b border-brand-accent/20 transition-all duration-300 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- 官方品牌識別 Logo -->
+      <a href="#" class="flex items-center space-x-3.5 group">
+        <div class="relative w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-brand-accent via-emerald-400 to-amber-200 shadow-md group-hover:scale-105 transition-transform duration-300">
+          <img src="https://raw.githubusercontent.com/doraemon770101/github.io/main/images/PS%E7%B6%B2%E9%A0%81%E9%A6%96%E5%9C%96.JPG" 
+               alt="P.S健康莊園" 
+               class="w-full h-full object-cover rounded-full"
+               onerror="this.src='https://placehold.co/100x100/0A2526/E5C467?text=PS'">
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xl sm:text-2xl font-bold tracking-wider text-white group-hover:text-brand-accent transition-colors flex items-center gap-1.5">
+            <span class="font-serif italic text-brand-accent text-2xl">ps.</span>
+            <span>健康莊園</span>
+          </span>
+          <span class="text-[10px] tracking-widest text-brand-muted uppercase font-serif">
+            HEALTH MANOR · MEET UR BEST SELF
+          </span>
+        </div>
+      </a>
+
+      <!-- 導覽操作區 -->
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <!-- 搜尋列 -->
+        <div class="relative hidden sm:block w-52 md:w-64">
+          <input type="text" 
+                 x-model="searchQuery" 
+                 placeholder="搜尋莊園保養、醫材、輔具..." 
+                 class="w-full bg-white/5 border border-white/15 text-sm rounded-full py-2 pl-9 pr-4 text-white placeholder-brand-muted/70 focus:outline-none focus:border-brand-accent focus:bg-white/10 transition-all">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-brand-muted"></i>
+          <button x-show="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-muted hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <a href="#company-profile" class="hidden md:inline-flex text-xs text-brand-muted hover:text-brand-accent transition items-center gap-1">
+          <i class="fa-solid fa-building"></i> 關於宸睿
+        </a>
+
+        <!-- 購物車按鈕 -->
+        <button @click="cartOpen = true" 
+                class="relative bg-brand-accent hover:bg-brand-hover text-slate-950 font-bold px-4 py-2 rounded-full flex items-center space-x-2 transition-all duration-200 active:scale-95 shadow-lg shadow-brand-accent/15">
+          <i class="fa-solid fa-bag-shopping text-base"></i>
+          <span class="hidden sm:inline text-xs">購物提袋</span>
+          <span x-show="totalCartCount > 0" 
+                x-text="totalCartCount" 
+                x-transition 
+                class="bg-rose-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-bounce">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 首頁形象看板 (Hero Banner) ================= -->
+  <section class="relative py-12 md:py-16 border-b border-brand-accent/20 overflow-hidden text-center bg-gradient-to-b from-[#0A2526] via-[#0d2f30] to-[#0A2526]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 relative z-10">
+      
+      <div class="inline-flex items-center gap-2 border border-brand-accent/40 bg-brand-accent/10 px-5 py-1.5 rounded-full backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-brand-accent animate-ping"></span>
+        <span class="text-brand-accent tracking-widest text-xs md:text-sm font-semibold uppercase">MEET UR BEST SELF.</span>
+      </div>
+
+      <h1 class="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">
+        遇見最好的自己<br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-amber-200 to-emerald-300 font-light text-xl md:text-3xl mt-2 block tracking-wider">
+          質感保健 · 嚴選保養 · 醫療修護 · 專業輔具
+        </span>
+      </h1>
+      
+      <p class="text-brand-muted text-sm md:text-base max-w-2xl mx-auto font-light leading-relaxed">
+        專為追求卓越品質的您策劃。嚴選歐洲專利配方與原裝進口醫材，全程採用<strong class="text-brand-accent font-medium">【無字樣隱密包裝】</strong>寄送，守護您的健康與隱私。
+      </p>
+
+      <!-- 運費與特色 Banner -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto pt-2 text-xs text-slate-300">
+        <div class="bg-brand-card/80 border border-brand-accent/20 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 hover-gradient-card">
+          <i class="fa-solid fa-truck-fast text-brand-accent text-base"></i>
+          <span>全館滿 <strong class="text-brand-accent font-bold">NT$ 1,000</strong> 享<strong class="text-brand-accent">超商免運</strong></span>
+        </div>
+        <div class="bg-brand-card/80 border border-brand-accent/20 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 hover-gradient-card">
+          <i class="fa-solid fa-box-archive text-amber-400 text-base"></i>
+          <span>Ottobock 輔具 <strong class="text-brand-accent font-bold">宅配免運</strong></span>
+        </div>
+        <div class="bg-brand-card/80 border border-brand-accent/20 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 hover-gradient-card">
+          <i class="fa-solid fa-shield-halved text-emerald-400 text-base"></i>
+          <span>合法醫材及食品販售 <strong class="text-brand-accent font-bold">原裝正品</strong></span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 企業品牌簡介區塊 ================= -->
+  <section id="company-profile" class="max-w-6xl mx-auto px-4 py-8">
+    <div class="bg-brand-card/70 border border-brand-accent/25 rounded-2xl p-6 md:p-8 backdrop-blur-sm shadow-xl">
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <div class="inline-block text-xs uppercase tracking-widest text-brand-accent font-bold mb-2">About Us</div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-wide">宸睿生醫 ‧ 專業代理 ‧ 鏈結健康未來</h2>
+        <p class="text-xs md:text-sm text-brand-muted mt-2 font-light leading-relaxed">
+          作為具備國際視野與嚴謹標準的生醫代理品牌，我們致力引進歐洲創新醫藥、醫材與營養品，建立原廠、醫療專業與消費者之間最堅實的橋樑。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-[#0A2526]/80 border border-brand-accent/20 p-5 rounded-xl hover-gradient-card">
+          <div class="w-10 h-10 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center text-xl mb-3">
+            <i class="fa-solid fa-eye"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-1.5">睿智選品</h3>
+          <p class="text-xs text-brand-muted leading-relaxed font-light">
+            以臨床實證與敏銳的醫學遠見為基石，精準篩選具備修護力與高滿意度的歐美原廠生醫產品。
+          </p>
+        </div>
+
+        <div class="bg-[#0A2526]/80 border border-brand-accent/20 p-5 rounded-xl hover-gradient-card">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-3">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-1.5">信賴連結</h3>
+          <p class="text-xs text-brand-muted leading-relaxed font-light">
+            嚴格遵循醫療法規與溫控品質監控，成為醫學中心、專科診所與消費者最信賴的合作夥伴。
+          </p>
+        </div>
+
+        <div class="bg-[#0A2526]/80 border border-brand-accent/20 p-5 rounded-xl hover-gradient-card">
+          <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-brand-accent flex items-center justify-center text-xl mb-3">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-1.5">共榮共贏</h3>
+          <p class="text-xs text-brand-muted leading-relaxed font-light">
+            提供專業衛教諮詢與原廠正品防偽保證，讓每位消費者都能在莊園中享受安全健康的購物體驗。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 商品主展區 ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+    
+    <!-- 分類 Tab 按鈕選單 -->
+    <div class="flex items-center justify-center sm:justify-start space-x-2 pb-6 overflow-x-auto no-scrollbar">
+      <template x-for="cat in categories" :key="cat.id">
+        <button @click="currentCategory = cat.id"
+                :class="currentCategory === cat.id 
+                  ? 'bg-gradient-to-r from-brand-accent to-amber-400 text-slate-950 font-bold shadow-lg shadow-brand-accent/20 scale-105' 
+                  : 'bg-brand-card text-brand-text border border-brand-accent/20 btn-hover-gradient'"
+                class="px-5 py-2.5 rounded-full text-xs md:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2">
+          <span x-text="cat.name"></span>
+          <span class="text-[10px] opacity-80 font-mono" x-text="`(${getCategoryCount(cat.id)})`"></span>
+        </button>
+      </template>
+    </div>
+
+    <!-- 搜尋結果提醒 -->
+    <div x-show="searchQuery" class="mb-6 flex items-center justify-between text-xs text-brand-muted bg-white/5 p-3 rounded-lg border border-white/10">
+      <div>
+        正在搜尋：<span class="text-brand-accent font-bold" x-text="searchQuery"></span>
+        （共找到 <span x-text="filteredProducts.length"></span> 筆商品）
+      </div>
+      <button @click="searchQuery = ''" class="text-brand-accent hover:underline">清除搜尋</button>
+    </div>
+
+    <!-- 商品卡片列表 Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <template x-for="product in filteredProducts" :key="product.id">
+        <div class="rounded-2xl flex flex-col justify-between overflow-hidden hover-gradient-card group shadow-xl">
+          
+          <!-- 商品上方圖文區 -->
+          <div>
+            <!-- 商品主圖 -->
+            <div class="relative w-full aspect-square bg-white rounded-t-xl overflow-hidden cursor-pointer flex items-center justify-center p-3" @click="openModal(product)">
+              <img :src="getCurrentProductImage(product)" 
+                   :alt="product.name"
+                   class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
+                   onerror="this.src='https://placehold.co/600x600/0A2526/E5C467?text=P.S+MANOR'">
+              
+              <!-- 標籤 Badge -->
+              <div class="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#0A2526]/90 text-brand-accent border border-brand-accent/30 shadow backdrop-blur-sm" x-text="product.tag"></span>
+                <template x-if="product.discountBadge && isProductBadgeVisible(product)">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-600 text-white shadow" x-text="product.discountBadge"></span>
+                </template>
+              </div>
+
+              <div x-show="product.isOttobock" class="absolute top-3 right-3 bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-md shadow">
+                限宅配/免運
+              </div>
+
+              <!-- 快速查看 Hover 遮罩 -->
+              <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                <span class="px-4 py-1.5 rounded-full bg-brand-accent text-slate-950 text-xs font-bold shadow-lg">
+                  <i class="fa-regular fa-eye mr-1"></i> 查看完整介紹
+                </span>
+              </div>
+            </div>
+
+            <!-- 商品文字內容 -->
+            <div class="p-4 sm:p-5">
+              <h3 class="text-base font-bold text-white group-hover:text-brand-accent transition-colors line-clamp-1 cursor-pointer mb-2"
+                  @click="openModal(product)"
+                  x-text="product.name"></h3>
+              
+              <p class="text-xs text-brand-muted line-clamp-2 leading-relaxed mb-4 font-light" x-text="product.desc"></p>
+
+              <!-- 規格容量切換 (若有多規格) -->
+              <template x-if="product.variants && product.variants.length > 1">
+                <div class="mb-4">
+                  <label class="block text-[11px] text-brand-muted mb-1.5 font-semibold">選擇規格 / 尺寸：</label>
+                  
+                  <!-- 輔具專區使用下拉式選單 (Select) -->
+                  <template x-if="product.category === 'assistive'">
+                    <select :value="product.selectedVariantIndex"
+                            @change="selectVariant(product, parseInt($event.target.value))"
+                            class="w-full bg-[#0A2526] border border-brand-accent/40 rounded-lg px-3 py-2 text-xs text-brand-accent focus:outline-none focus:border-brand-accent transition">
+                      <template x-for="(variant, vIndex) in product.variants" :key="vIndex">
+                        <option :value="vIndex" x-text="`${variant.label} - NT$ ${variant.price}`"></option>
+                      </template>
+                    </select>
+                  </template>
+
+                  <!-- 其他分類保留按鈕式選擇 -->
+                  <template x-if="product.category !== 'assistive'">
+                    <div class="flex flex-wrap gap-1.5">
+                      <template x-for="(variant, vIndex) in product.variants" :key="vIndex">
+                        <button @click="selectVariant(product, vIndex)"
+                                :class="product.selectedVariantIndex === vIndex ? 'bg-brand-accent text-slate-950 font-bold border-brand-accent' : 'bg-white/5 text-slate-300 border-white/15 hover:border-white/30'"
+                                class="text-xs px-2.5 py-1 rounded-md border transition-all"
+                                x-text="variant.label"></button>
+                      </template>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <!-- 購買數量選擇 -->
+              <div class="flex items-center justify-between mb-4 bg-[#0A2526]/70 p-2.5 rounded-xl border border-brand-accent/20">
+                <span class="text-xs text-brand-muted font-medium">購買數量</span>
+                <div class="flex items-center border border-slate-700 bg-slate-900 rounded-lg overflow-hidden">
+                  <button @click="changeBuyQty(product, -1)" class="px-2.5 py-1 text-slate-300 hover:bg-slate-800 text-xs transition">-</button>
+                  <span class="px-3 text-xs font-bold text-white min-w-[24px] text-center" x-text="product.buyQty || 1"></span>
+                  <button @click="changeBuyQty(product, 1)" class="px-2.5 py-1 text-slate-300 hover:bg-slate-800 text-xs transition">+</button>
+                </div>
+              </div>
+
+              <!-- 價格動態試算顯示 -->
+              <div class="space-y-1 mb-2">
+                <template x-if="isProductDiscountActive(product)">
+                  <div class="flex items-baseline gap-2 flex-wrap">
+                    <span class="text-2xl font-black text-rose-400">
+                      NT$ <span x-text="getProductCalculatedTotal(product)"></span>
+                    </span>
+                    <span class="text-xs text-slate-500 line-through">
+                      NT$ <span x-text="getProductRawTotal(product)"></span>
+                    </span>
+                    <span class="text-[10px] bg-rose-500/25 text-rose-300 border border-rose-500/40 px-1.5 py-0.5 rounded font-bold animate-pulse">
+                      特惠單件 NT$ <span x-text="getProductEffectiveUnitPrice(product)"></span>
+                    </span>
+                  </div>
+                </template>
+                <template x-if="!isProductDiscountActive(product)">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-2xl font-black text-brand-accent">
+                      NT$ <span x-text="getProductCalculatedTotal(product)"></span>
+                    </span>
+                    <span x-show="(product.buyQty || 1) > 1" class="text-xs text-brand-muted">
+                      (單件 NT$ <span x-text="getProductUnitPrice(product)"></span>)
+                    </span>
+                  </div>
+                </template>
+
+                <!-- 滿件折提醒提示條 -->
+                <template x-if="product.bulkDiscount && isProductDiscountActive(product) === false && isVariantEligibleForDiscount(product)">
+                  <p class="text-[11px] text-amber-300/90 flex items-center gap-1">
+                    <i class="fa-solid fa-fire text-amber-400"></i>
+                    <span>再加 <strong class="text-brand-accent font-bold" x-text="product.bulkDiscount.minQty - (product.buyQty || 1)"></strong> 件享多件優惠！</span>
+                  </p>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- 加入購物車按鈕 -->
+          <div class="p-4 sm:p-5 pt-0 flex gap-2">
+            <button @click="openModal(product)" class="bg-slate-800 hover:bg-slate-700 text-brand-text text-xs px-3 py-2.5 rounded-xl transition border border-brand-accent/20 flex items-center gap-1">
+              <i class="fa-solid fa-circle-info"></i> 詳情
+            </button>
+            <button @click="addToCart(product)"
+                    class="flex-1 py-2.5 rounded-xl bg-brand-accent hover:bg-brand-hover text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition-all shadow-md active:scale-95">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>加入提袋 (<span x-text="product.buyQty || 1"></span>)</span>
+            </button>
+          </div>
+
+        </div>
+      </template>
+    </div>
+
+    <!-- 無搜尋結果提示 -->
+    <div x-show="filteredProducts.length === 0" class="text-center py-20 bg-white/5 rounded-2xl border border-white/10 mt-6">
+      <i class="fa-regular fa-face-frown text-4xl text-brand-muted mb-3"></i>
+      <h3 class="text-lg font-bold text-white mb-1">找不到相關商品</h3>
+      <p class="text-xs text-brand-muted mb-4">請嘗試更換關鍵字或點選不同分類</p>
+      <button @click="searchQuery = ''; currentCategory = 'all'" class="px-5 py-2 rounded-full bg-brand-accent text-slate-950 text-xs font-bold">
+        瀏覽所有商品
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ================= 商品詳情彈窗 (Modal) ================= -->
+  <div x-show="modalOpen" 
+       x-cloak
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+    
+    <div @click.away="modalOpen = false" 
+         class="relative w-full max-w-4xl bg-[#0e3234] border border-brand-accent/40 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+      
+      <!-- 關閉按鈕 -->
+      <button @click="modalOpen = false" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/60 text-white hover:text-brand-accent hover:bg-black flex items-center justify-center transition-all">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- 左側：圖片輪播與縮圖 -->
+      <div class="md:w-1/2 p-6 bg-white/5 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10">
+        <div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-white border border-brand-accent/20 flex items-center justify-center p-4">
+          <img :src="modalActiveImage" 
+               class="max-h-full max-w-full object-contain"
+               alt="商品詳情照"
+               onerror="this.src='https://placehold.co/600x600/0A2526/E5C467?text=PS+MANOR'">
+        </div>
+
+        <!-- 縮圖列表 -->
+        <template x-if="activeModalProduct && getActiveModalImages().length > 1">
+          <div class="flex items-center gap-2 mt-4 overflow-x-auto pb-2 no-scrollbar justify-center">
+            <template x-for="(img, idx) in getActiveModalImages()" :key="idx">
+              <button @click="modalActiveImage = img"
+                      :class="modalActiveImage === img ? 'border-brand-accent ring-2 ring-brand-accent/50 scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
+                      class="w-14 h-14 rounded-xl overflow-hidden border-2 flex-shrink-0 bg-white p-1 transition-all">
+                <img :src="img" class="w-full h-full object-contain">
+              </button>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!-- 右側：完整說明與下單區 -->
+      <div class="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
+        <template x-if="activeModalProduct">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-brand-accent/20 text-brand-accent border border-brand-accent/30" x-text="activeModalProduct.tag"></span>
+              <template x-if="activeModalProduct.discountBadge && isProductBadgeVisible(activeModalProduct)">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-600 text-white" x-text="activeModalProduct.discountBadge"></span>
+              </template>
+            </div>
+
+            <h2 class="text-xl sm:text-2xl font-bold text-white" x-text="activeModalProduct.name"></h2>
+
+            <!-- 規格選擇 (彈窗) -->
+            <template x-if="activeModalProduct.variants && activeModalProduct.variants.length > 1">
+              <div>
+                <label class="block text-xs text-brand-muted mb-1.5 font-semibold">選擇規格 / 尺寸：</label>
+                
+                <!-- 輔具專區彈窗使用下拉式選單 -->
+                <template x-if="activeModalProduct.category === 'assistive'">
+                  <select :value="activeModalProduct.selectedVariantIndex"
+                          @change="selectVariant(activeModalProduct, parseInt($event.target.value))"
+                          class="w-full bg-[#0A2526] border border-brand-accent/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-brand-accent focus:outline-none focus:border-brand-accent transition">
+                    <template x-for="(variant, vIndex) in activeModalProduct.variants" :key="vIndex">
+                      <option :value="vIndex" x-text="`${variant.label} - NT$ ${variant.price}`"></option>
+                    </template>
+                  </select>
+                </template>
+
+                <!-- 其他分類保留按鈕式 -->
+                <template x-if="activeModalProduct.category !== 'assistive'">
+                  <div class="flex flex-wrap gap-2">
+                    <template x-for="(variant, vIndex) in activeModalProduct.variants" :key="vIndex">
+                      <button @click="selectVariant(activeModalProduct, vIndex)"
+                              :class="activeModalProduct.selectedVariantIndex === vIndex ? 'bg-brand-accent text-slate-950 font-bold border-brand-accent' : 'bg-white/5 text-slate-300 border-white/15 hover:border-white/30'"
+                              class="text-xs px-3 py-1.5 rounded-lg border transition-all"
+                              x-text="variant.label"></button>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </template>
+
+            <!-- 完整詳細描述 -->
+            <div class="border-t border-b border-brand-accent/20 py-4 max-h-56 overflow-y-auto pr-2 text-xs sm:text-sm text-slate-300 whitespace-pre-line leading-relaxed font-light" x-text="activeModalProduct.detail"></div>
+
+            <!-- 數量與結帳試算 -->
+            <div class="flex items-center justify-between bg-[#0A2526]/80 p-3 rounded-2xl border border-brand-accent/20">
+              <span class="text-xs text-brand-muted font-medium">選擇購買數量</span>
+              <div class="flex items-center border border-slate-700 bg-slate-900 rounded-lg overflow-hidden">
+                <button @click="changeBuyQty(activeModalProduct, -1)" class="px-3 py-1 text-slate-300 hover:bg-slate-800 text-xs transition">-</button>
+                <span class="px-4 text-xs font-bold text-white min-w-[28px] text-center" x-text="activeModalProduct.buyQty || 1"></span>
+                <button @click="changeBuyQty(activeModalProduct, 1)" class="px-3 py-1 text-slate-300 hover:bg-slate-800 text-xs transition">+</button>
+              </div>
+            </div>
+
+            <!-- 價格試算 -->
+            <div class="flex items-end justify-between pt-2">
+              <div>
+                <span class="text-xs text-brand-muted block">總計金額</span>
+                <template x-if="isProductDiscountActive(activeModalProduct)">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-rose-400">
+                      NT$ <span x-text="getProductCalculatedTotal(activeModalProduct)"></span>
+                    </span>
+                    <span class="text-xs text-slate-500 line-through">
+                      NT$ <span x-text="getProductRawTotal(activeModalProduct)"></span>
+                    </span>
+                  </div>
+                </template>
+                <template x-if="!isProductDiscountActive(activeModalProduct)">
+                  <span class="text-3xl font-black text-brand-accent">
+                    NT$ <span x-text="getProductCalculatedTotal(activeModalProduct)"></span>
+                  </span>
+                </template>
+              </div>
+
+              <button @click="addToCart(activeModalProduct); modalOpen = false"
+                      class="px-6 py-3 rounded-xl bg-brand-accent hover:bg-brand-hover text-slate-950 font-bold text-sm flex items-center gap-2 shadow-lg transition-transform active:scale-95">
+                <i class="fa-solid fa-cart-arrow-down"></i>
+                <span>加入提袋 (<span x-text="activeModalProduct.buyQty || 1"></span>)</span>
+              </button>
+            </div>
+
+          </div>
+        </template>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= 購物袋抽屜 (Cart Drawer) ================= -->
+  <div x-show="cartOpen" 
+       x-cloak
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm">
+    
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div @click.away="cartOpen = false" 
+           class="w-screen max-w-md bg-[#092223] border-l border-brand-accent/30 flex flex-col justify-between shadow-2xl">
+        
+        <!-- 抽屜頂部 -->
+        <div class="p-5 border-b border-brand-accent/20 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-bag-shopping text-brand-accent text-lg"></i>
+            <h2 class="text-base font-bold text-white">莊園提袋 (<span x-text="totalCartCount"></span>)</h2>
+          </div>
+          <button @click="cartOpen = false" class="text-slate-400 hover:text-white">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- 提袋清單 -->
+        <div class="flex-grow overflow-y-auto p-5 space-y-4">
+          <template x-if="cart.length === 0">
+            <div class="text-center py-20 text-brand-muted">
+              <i class="fa-solid fa-basket-shopping text-4xl mb-3 text-brand-accent/30 block"></i>
+              <p class="text-sm">購物提袋目前空空如也</p>
+              <button @click="cartOpen = false" class="mt-4 px-4 py-2 rounded-full bg-white/10 text-brand-accent text-xs font-bold hover:bg-white/20">
+                立即前往挑選
+              </button>
+            </div>
+          </template>
+
+          <template x-for="(item, index) in cart" :key="index">
+            <div class="p-3.5 rounded-xl bg-white/5 border border-brand-accent/20 flex items-center gap-3">
+              <img :src="item.image" :alt="item.name" class="w-16 h-16 rounded-lg object-contain bg-white p-1 border border-brand-accent/20">
+              
+              <div class="flex-grow min-w-0">
+                <div class="flex items-center gap-1 flex-wrap">
+                  <h4 class="text-xs font-bold text-white truncate" x-text="item.name"></h4>
+                  <span x-show="item.isOttobock" class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded">限宅配免運</span>
+                </div>
+                <p x-show="item.variant" class="text-[11px] text-brand-muted mt-0.5" x-text="`規格: ${item.variant}`"></p>
+                <div class="text-xs text-brand-accent font-bold mt-1">
+                  NT$ <span x-text="item.price"></span>
+                </div>
+              </div>
+
+              <!-- 數量增減 -->
+              <div class="flex items-center space-x-1.5">
+                <button @click="updateCartQty(index, -1)" class="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs">
+                  <i class="fa-solid fa-minus text-[10px]"></i>
+                </button>
+                <span class="w-6 text-center text-xs font-bold text-white" x-text="item.qty"></span>
+                <button @click="updateCartQty(index, 1)" class="w-6 h-6 rounded bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                </button>
+              </div>
+
+              <button @click="removeFromCart(index)" class="text-slate-500 hover:text-rose-400 p-1">
+                <i class="fa-regular fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </template>
+        </div>
+
+        <!-- 抽屜結算底欄 -->
+        <div class="p-5 border-t border-brand-accent/20 bg-slate-950/60 space-y-3" x-show="cart.length > 0">
+          
+          <!-- 常駐結帳配送提示區塊 -->
+          <div class="bg-amber-500/15 border border-brand-accent/40 rounded-xl p-3 text-xs text-amber-200/95 leading-relaxed space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-brand-accent">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>下單配送須知：</span>
+            </div>
+            <p class="text-[11px] font-light">
+              此網站皆為<strong>預購商品</strong>；下單完成之後請訊息賣家，以利賣家使用<strong>超商</strong>或是<strong>黑貓宅急便</strong>寄出（<span class="text-rose-300 font-medium">輔具一律先付款後宅配</span>）。
+            </p>
+          </div>
+
+          <div class="flex justify-between text-xs text-slate-300">
+            <span>商品小計</span>
+            <span class="font-bold">NT$ <span x-text="cartSubtotal"></span></span>
+          </div>
+          
+          <div class="flex justify-between text-xs text-slate-300">
+            <span>運費計算</span>
+            <div>
+              <span x-show="cartShippingFee === 0" class="text-emerald-400 font-bold flex items-center gap-1">
+                <i class="fa-solid fa-circle-check"></i> <span x-text="cartShippingFeeText"></span>
+              </span>
+              <span x-show="cartShippingFee > 0">NT$ <span x-text="cartShippingFee"></span></span>
+            </div>
+          </div>
+
+          <div x-show="!hasOttobock && orderForm.shipping.includes('7-11') && cartSubtotal < 1000" class="text-[11px] text-amber-300 bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
+            超商取貨滿 NT$ 1,000 即享免運！還差 NT$ <span x-text="1000 - cartSubtotal"></span>
+          </div>
+
+          <div class="border-t border-brand-accent/20 pt-2 flex justify-between items-baseline text-white">
+            <span class="text-sm font-bold">訂單總額</span>
+            <span class="text-2xl font-black text-brand-accent">NT$ <span x-text="cartFinalTotal"></span></span>
+          </div>
+
+          <!-- 結帳送單按鈕 -->
+          <button @click="triggerCheckoutConfirmation()" 
+                  class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+            <i class="fa-solid fa-file-invoice-dollar text-lg"></i>
+            <span>填寫收件資訊與結帳送單</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 結帳表單與提醒確認彈窗 (Notice Modal) ================= -->
+  <div x-show="checkoutNoticeModalOpen" 
+       x-cloak
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0 scale-95"
+       x-transition:enter-end="opacity-100 scale-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100 scale-100"
+       x-transition:leave-end="opacity-0 scale-95"
+       class="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+    
+    <div class="relative w-full max-w-xl bg-[#0e3234] border border-brand-accent/60 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      
+      <!-- 關閉按鈕 -->
+      <button @click="checkoutNoticeModalOpen = false" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center">
+        <div class="w-14 h-14 rounded-full bg-brand-accent/20 border border-brand-accent/50 text-brand-accent text-2xl flex items-center justify-center mx-auto mb-2 shadow">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-bold text-white tracking-wide">
+          填寫收件資訊與結帳送單
+        </h3>
+        <p class="text-xs text-brand-muted mt-1">請填寫收件人資料，送出後將同步傳送至系統與 LINE 聯繫：</p>
+      </div>
+
+      <!-- 重要出貨須知提示框 -->
+      <div class="bg-amber-500/15 border border-brand-accent/40 rounded-2xl p-4 text-xs text-amber-200/95 leading-relaxed space-y-1">
+        <div class="font-bold flex items-center gap-1.5 text-brand-accent text-sm">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>重要出貨須知：</span>
+        </div>
+        <p class="font-light text-[11px]">
+          此網站皆為<strong>預購商品</strong>；下單完成之後請訊息賣家，以利賣家使用<strong>超商</strong>或是<strong>黑貓宅急便</strong>寄出（<span class="text-rose-300 font-medium">輔具一律先付款後宅配</span>）。
+        </p>
+      </div>
+
+      <!-- Google 表單對應欄位 (使用 fetch 背景非同步發送，保證 100% 成功寫入) -->
+      <form @submit.prevent="submitOrderToGoogleForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-brand-muted mb-1 font-medium">收件人姓名 <span class="text-rose-400">*</span></label>
+          <input type="text" x-model="orderForm.name" required placeholder="請輸入真實姓名" 
+                 class="w-full bg-[#0A2526] border border-brand-accent/30 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-brand-muted/50 focus:outline-none focus:border-brand-accent">
+        </div>
+
+        <div>
+          <label class="block text-xs text-brand-muted mb-1 font-medium">聯絡電話 <span class="text-rose-400">*</span></label>
+          <input type="tel" x-model="orderForm.phone" required placeholder="0912345678" 
+                 class="w-full bg-[#0A2526] border border-brand-accent/30 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-brand-muted/50 focus:outline-none focus:border-brand-accent">
+        </div>
+
+        <div>
+          <label class="block text-xs text-brand-muted mb-1 font-medium">電子郵件 (Email) <span class="text-rose-400">*</span></label>
+          <input type="email" x-model="orderForm.email" required placeholder="example@domain.com" 
+                 class="w-full bg-[#0A2526] border border-brand-accent/30 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-brand-muted/50 focus:outline-none focus:border-brand-accent">
+        </div>
+
+        <div>
+          <label class="block text-xs text-brand-muted mb-1 font-medium">配送方式 <span class="text-rose-400">*</span></label>
+          <select x-model="orderForm.shipping" required @change="checkShippingConstraint()"
+                  class="w-full bg-[#0A2526] border border-brand-accent/30 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-accent">
+            <option value="7-11超商取貨" :disabled="hasOttobock">7-11 超商取貨 (NT$ 60)</option>
+            <option value="黑貓宅急便(宅配到府)">黑貓宅急便 (宅配到府) (NT$ 120)</option>
+          </select>
+          <p x-show="hasOttobock" class="text-[11px] text-amber-300 mt-1">※ 訂單內含 Ottobock 專業輔具，已自動指定並鎖定為「宅配免運」，不適用超商。</p>
+        </div>
+
+        <div>
+          <label class="block text-xs text-brand-muted mb-1 font-medium">
+            <span x-text="orderForm.shipping.includes('宅配') ? '宅配收件地址 *' : '7-11 超商門市資訊 (店名/店號) *'"></span>
+          </label>
+          <textarea x-model="orderForm.address" required rows="2" 
+                    :placeholder="orderForm.shipping.includes('宅配') ? '請填寫完整宅配收件地址' : '請填寫 7-11 店名+店號'" 
+                    class="w-full bg-[#0A2526] border border-brand-accent/30 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-brand-muted/50 focus:outline-none focus:border-brand-accent"></textarea>
+          
+          <!-- 門市查詢連結 -->
+          <div x-show="!orderForm.shipping.includes('宅配')" class="text-[11px] text-brand-muted mt-1.5">
+            <span>超商門市查詢：</span>
+            <a href="https://emap.pcsc.com.tw" target="_blank" rel="noopener" class="text-brand-accent underline hover:text-brand-hover">7-11 門市查詢</a>
+          </div>
+        </div>
+
+        <div class="bg-white/5 p-3 rounded-xl border border-white/10 text-xs flex justify-between items-center">
+          <span class="text-brand-muted">應付總金額：</span>
+          <span class="text-lg font-black text-brand-accent">NT$ <span x-text="cartFinalTotal"></span></span>
+        </div>
+
+        <!-- 按鈕送出 -->
+        <div class="flex gap-3 pt-2">
+          <button type="button" @click="checkoutNoticeModalOpen = false" 
+                  class="w-1/3 py-3 rounded-xl border border-white/20 text-slate-300 hover:text-white hover:bg-white/10 text-xs sm:text-sm font-semibold transition">
+            返回
+          </button>
+          <button type="submit" :disabled="isSubmitting"
+                  class="w-2/3 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-xs sm:text-sm shadow-xl flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50">
+            <i class="fa-solid fa-paper-plane text-base"></i>
+            <span x-text="isSubmitting ? '正在送出訂單...' : '確認送出訂單'"></span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ================= 訂單成功送出與官方 LINE QR Code 彈窗 ================= -->
+  <div x-show="orderSuccessModalOpen" 
+       x-cloak
+       class="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+    
+    <div class="relative w-full max-w-md bg-[#0e3234] border border-emerald-500/60 rounded-3xl p-6 sm:p-8 text-center shadow-2xl space-y-4">
+      <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-3xl flex items-center justify-center mx-auto shadow-lg">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <h3 class="text-xl sm:text-2xl font-bold text-white">訂單已成功送出！</h3>
+      <p class="text-xs text-brand-muted leading-relaxed">
+        感謝您的預購！為加快出貨流程，請立即使用手機掃描下方 QR Code 或點擊按鈕加入官方 LINE 傳送訂單給賣家：
+      </p>
+
+      <!-- 官方 LINE 純淨 QR Code 圖片 -->
+      <div class="bg-white p-3 rounded-2xl w-44 h-44 mx-auto shadow-inner flex items-center justify-center border border-brand-accent/30">
+        <img src="https://qr-official.line.me/gs/M_ylx8463z_BW.png?oat_content=qr" alt="官方 LINE QR Code" class="w-full h-full object-contain">
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <a href="https://line.me/R/ti/p/@ylx8463z" target="_blank"
+           class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 text-white font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition">
+          <i class="fa-brands fa-line text-lg"></i>
+          <span>點擊前往 LINE 聯繫賣家</span>
+        </a>
+
+        <button @click="orderSuccessModalOpen = false; cart = [];" 
+                class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-semibold transition">
+          完成並返回首頁
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 頁尾 (Footer) ================= -->
+  <footer class="border-t border-brand-accent/20 bg-[#07191a] text-slate-400 text-xs py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- 品牌簡介 -->
+      <div class="space-y-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-brand-accent to-emerald-400">
+            <img src="https://raw.githubusercontent.com/doraemon770101/github.io/main/images/PS%E7%B6%B2%E9%A0%81%E9%A6%96%E5%9C%96.JPG" class="w-full h-full object-cover rounded-full" alt="PS Logo">
+          </div>
+          <span class="text-white font-bold text-base">P.S健康莊園 HEALTH MANOR</span>
+        </div>
+        <p class="leading-relaxed text-[11px] text-slate-400">
+          HEALTHY & NATURAL LIFE<br>
+          堅持嚴選歐美專業醫療生技與個人健康護理品項，提供每一位顧客純淨、安心且具科學實證的健康體驗。
+        </p>
+      </div>
+
+      <!-- 廠商與法規登錄 -->
+      <div class="space-y-2">
+        <h4 class="text-white font-bold text-sm mb-3">廠商與營業登記資訊</h4>
+        <p>醫療器材商名稱：宸睿生醫有限公司</p>
+        <p>營業地址：臺北市萬華區康定路116號7樓之4</p>
+        <p>醫療器材商許可證：北市衛器販（萬）字第MD6201098413號</p>
+        <p>食品許可執照：北市衛食藥字第11530229299號</p>
+        <p>食品業者登入字號：A-162140239-00000-5</p>
+      </div>
+
+      <!-- 客服與諮詢專線 -->
+      <div class="space-y-2">
+        <h4 class="text-white font-bold text-sm mb-3">專業諮詢與客戶服務</h4>
+        <p><i class="fa-solid fa-phone text-brand-accent mr-2"></i>諮詢專線：0966-087-237</p>
+        <p><i class="fa-solid fa-clock text-brand-accent mr-2"></i>服務時間：週一至週五 09:30 - 18:30</p>
+        <p class="text-[11px] text-amber-200/70 pt-2">
+          ※ 消費者使用前應詳閱產品說明書及醫療器材標籤。
+        </p>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pt-6 border-t border-white/5 text-center text-[11px] text-slate-500">
+      © 2026 P.S健康莊園 HEALTH MANOR. 版權所有。
+    </div>
+  </footer>
+
+  <!-- ================= Alpine.js 核心資料與互動邏輯 ================= -->
+  <script>
+    function storeData() {
+      const saugellaCommonImages = [
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0395.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0394.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0393.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0392.jpeg',
+        'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0391.jpeg'
+      ];
+
+      return {
+        searchQuery: '',
+        currentCategory: 'all',
+        modalOpen: false,
+        cartOpen: false,
+        checkoutNoticeModalOpen: false,
+        orderSuccessModalOpen: false,
+        isSubmitting: false,
+        activeModalProduct: null,
+        modalActiveImage: '',
+        cart: [],
+
+        orderForm: {
+          name: '',
+          phone: '',
+          email: '',
+          shipping: '7-11超商取貨',
+          address: ''
+        },
+
+        categories: [
+          { id: 'all', name: '全部商品' },
+          { id: 'women', name: '私密清潔／婦女保養' },
+          { id: 'medical_care', name: '醫療照護 (醫材)' },
+          { id: 'healthcare', name: '營養保健食品' },
+          { id: 'assistive', name: '輔具專區' }
+        ],
+
+        products: [
+          {
+            id: 1,
+            category: 'women',
+            tag: '日常防護・鼠尾草菁萃',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [日用型]',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399%202.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0397.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '天天使用維持私密肌自然酸鹼平衡。天然鼠尾草菁萃與乳酸配方，質地溫和清新。',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '100ml', price: 200, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399.JPG' },
+              { label: '250ml', price: 350, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0399%202.JPG' },
+              { label: '500ml', price: 600, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0397.JPG' }
+            ],
+            detail: `天天使用維持私密肌自然酸鹼平衡。\n天然鼠尾草菁萃與乳酸配方，洗淨異味與黏膩感，帶來一整天的清新自信。`
+          },
+          {
+            id: 2,
+            category: 'women',
+            tag: '特殊時期・百里香菁萃',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [加強型]',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0400.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0400.JPG',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0398.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '生理期、懷孕期、產後或運動後專用。百里香菁萃加倍防護，提升私密肌抵禦力。',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '100ml', price: 220, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0400.JPG' },
+              { label: '250ml', price: 450, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0398.JPG' },
+              { label: '500ml', price: 680, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0398.JPG' }
+            ],
+            detail: `經期前後、運動流汗、泡湯旅遊及孕期產後最佳選擇。蘊含天然百里香菁萃，深層淨護。`
+          },
+          {
+            id: 3,
+            category: 'women',
+            tag: '深層水嫩・燕麥萃取',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [潤澤型] 200ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0401.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0401.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '針對乾燥敏弱私密肌設計，燕麥萃取深度補水，洗後柔嫩不乾澀。',
+            price: 350,
+            buyQty: 1,
+            detail: `特別適合換季乾燥或易乾澀體質，溫和滋潤洗感，給私密肌溫柔的水潤修護。`
+          },
+          {
+            id: 4,
+            category: 'women',
+            tag: '沁涼薄荷・酷夏必備',
+            name: '【SAUGELLA 賽吉兒】菁萃潔浴凝露 [涼感型] 200ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0404.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0404.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '微涼薄荷配方，迅速帶走悶熱悶痛感，夏季炎熱或生理期必備救星。',
+            price: 380,
+            buyQty: 1,
+            detail: `微涼溫和不刺激，掃除黏膩悶熱感，洗後感受如沐微風般的極致舒適。`
+          },
+          {
+            id: 5,
+            category: 'women',
+            tag: '初經少女・棉花萃取',
+            name: '【SAUGELLA 賽吉兒】潔浴凝露 [少女型] 200ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0403.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0403.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '3歲以上幼童及青少女日常私密清潔。棉花籽精華溫柔呵護稚嫩膚質。',
+            price: 350,
+            buyQty: 1,
+            detail: `專為青春期少女與幼童敏弱肌量身訂製，無色素、無刺激，建立良好私密沐浴習慣。`
+          },
+          {
+            id: 6,
+            category: 'women',
+            tag: '熟齡修護・玻尿酸滋養',
+            name: '【SAUGELLA 賽吉兒】菁萃婦潔凝露 [逆齡型] 250ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0402.JPG',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0402.JPG',
+              ...saugellaCommonImages
+            ],
+            desc: '熟齡更年期女性專用。玻尿酸與天然植萃複方，舒緩肌膚萎縮乾燥不適。',
+            price: 440,
+            buyQty: 1,
+            detail: `特別推薦給 45 歲以上／熟齡女性使用。蘊含玻尿酸及植物菁萃，深層舒緩乾薄纖細的私密肌。`
+          },
+          {
+            id: 7,
+            category: 'women',
+            tag: '滋養水潤・日夜防護',
+            name: '【SAUGELLA 賽吉兒】菁萃柔嫩乳霜 30ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.06%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.06%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.06%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F%20(1).png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.02%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              ...saugellaCommonImages
+            ],
+            desc: '沐浴後專用潤澤乳霜，鎖住水分，告別摩擦與乾燥粗糙。',
+            price: 660,
+            buyQty: 1,
+            detail: `針對私密外陰肌膚乾燥不適設計，質地輕盈柔滑好吸收，建立肌膚天然保護膜。`
+          },
+          {
+            id: 8,
+            category: 'women',
+            tag: '密集補水・加強修護',
+            name: '【SAUGELLA 賽吉兒】高效修護保濕凝膠 [加強型] 30ml',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%888.59%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+            images: [
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%888.59%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.00%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F.png',
+              'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E4%B8%8A%E5%8D%889.01%202026-9-11%E7%9A%84%E5%BD%B1%E5%83%8F%20(2).png',
+              ...saugellaCommonImages
+            ],
+            desc: '清爽凝膠質地，迅速滲透修護，提升私密肌含水量與彈性。',
+            price: 560,
+            buyQty: 1,
+            detail: `高濃度水感修護配方，溫和無刺激，適合乾燥緊繃時日常保養。`
+          },
+          {
+            id: 9,
+            category: 'healthcare',
+            tag: '全素可食・雙效草本黃金配方',
+            name: '【三友】濃縮薑黃 PLUS 紅景天錠 (大60顆/小10顆)',
+            discountBadge: '大盒兩盒以上一盒800',
+            image: 'https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E8%96%91%E9%BB%83%E5%B0%81%E9%9D%A2.jpeg',
+            images: [
+              'https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E8%96%91%E9%BB%83%E5%B0%81%E9%9D%A2.jpeg',
+              'https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E8%96%91%E9%BB%83%E5%85%A7%E9%A0%81.jpeg',
+              'https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E8%96%91%E9%BB%83%E5%85%A7%E9%A0%811.jpeg'
+            ],
+            desc: '雙效草本黃金配方！滋補強身、增強體力、促進新陳代謝。',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '大盒 (60顆)', price: 850, image: 'https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E8%96%91%E9%BB%83%E5%B0%81%E9%9D%A2.jpeg' },
+              { label: '小盒 (10顆)', price: 200, image: 'https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E8%96%91%E9%BB%83%E5%B0%81%E9%9D%A2.jpeg' }
+            ],
+            bulkDiscount: { minQty: 2, fixedPrice: 800, label: '大盒已享多件優惠 NT$800/盒' },
+            detail: `【三友 濃縮薑黃 PLUS 紅景天錠】`
+          },
+          {
+            id: 10,
+            category: 'healthcare',
+            tag: '11-19歲青少年・漢方草本',
+            name: '【三友】男用成長運動膠囊（100粒/盒）',
+            discountBadge: '買2盒以上一盒850',
+            image: 'https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E7%94%B7%E7%94%A8%E6%88%90%E9%95%B7%E9%81%8B%E5%8B%95%E8%86%A0%E5%9B%8A%E5%B0%81%E9%9D%A2.JPG',
+            images: ['https://raw.githubusercontent.com/chenruibio62140239/github.io/main/images/%E7%94%B7%E7%94%A8%E6%88%90%E9%95%B7%E9%81%8B%E5%8B%95%E8%86%A0%E5%9B%8A%E5%B0%81%E9%9D%A2.JPG'],
+            desc: '專為 11～19 歲發育期青少年設計的黃金營養補給！',
+            price: 900,
+            buyQty: 1,
+            bulkDiscount: { minQty: 2, fixedPrice: 850, label: '已享多件優惠 NT$850/盒' },
+            detail: `男用成長運動膠囊`
+          },
+          {
+            id: 20,
+            category: 'medical_care',
+            tag: '第一等級醫材・法國原裝',
+            name: '【法國疤痕護理凝膠】優潔 EUROGEL PLUS GEL 20g',
+            discountBadge: '兩條以上一條2200',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%B0%81%E9%9D%A2.png',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E6%BD%94%E5%B0%81%E9%9D%A2.png'],
+            desc: '法國原裝進口、國內醫學中心指定使用！兩條以上優惠一條 2200。',
+            price: 2300,
+            buyQty: 1,
+            bulkDiscount: { minQty: 2, fixedPrice: 2200, label: '已享多件優惠 NT$2200/件' },
+            detail: `優潔疤痕護理凝膠`
+          },
+          {
+            id: 11,
+            category: 'healthcare',
+            tag: '醫療級雙益生菌・整腸調理',
+            name: '【Infloran 益腹寧】膠囊 (20顆)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E7%9B%8A%E8%85%B9%E5%AF%A7%E5%B0%81%E9%9D%A2.jpeg',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E7%9B%8A%E8%85%B9%E5%AF%A7%E5%B0%81%E9%9D%A2.jpeg'],
+            desc: '瑞士進口醫療級益生菌。',
+            price: 500,
+            buyQty: 1,
+            detail: `益腹寧膠囊`
+          },
+          {
+            id: 12,
+            category: 'healthcare',
+            tag: '德國專利胜肽・靈活肌力',
+            name: '【德國膠原蛋白胜肽】萊基力 MyoCol (30包)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E8%90%8A%E8%82%8C%E5%8A%9B.jpg',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E8%90%8A%E8%82%8C%E5%8A%9B.jpg'],
+            desc: '德國 GELITA 原廠專利水解膠原蛋白胜肽。',
+            price: 4000,
+            buyQty: 1,
+            detail: `萊基力 MyoCol`
+          },
+          {
+            id: 13,
+            category: 'healthcare',
+            tag: '21種關鍵營養・好吞服軟膠囊',
+            name: '【德國綜合維他命】新保力能 軟膠囊 (100粒/瓶)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E6%96%B0%E4%BF%9D%E5%8A%9B%E8%83%BD%E5%B0%81%E9%9D%A2.jpg',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E6%96%B0%E4%BF%9D%E5%8A%9B%E8%83%BD%E5%B0%81%E9%9D%A2.jpg'],
+            desc: '備孕及孕期最推薦！含焦磷酸鐵與21種完整維生素礦物質。',
+            price: 1500,
+            buyQty: 1,
+            detail: `新保力能軟膠囊`
+          },
+          {
+            id: 16,
+            category: 'healthcare',
+            tag: '加拿大原裝・每滴400IU',
+            name: '【加拿大D3】高濃縮天然維生素D3 優寶滴- LiquiD P&B (5mL)',
+            discountBadge: '兩瓶以上一瓶1600',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E5%AF%B6%E6%BB%B4%E5%B0%81%E9%9D%A2.png',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E5%AF%B6%E6%BB%B4%E5%B0%81%E9%9D%A2.png'],
+            desc: '每一滴含 400IU 天然維生素D3。兩瓶以上享優惠一瓶 1600。',
+            price: 1700,
+            buyQty: 1,
+            bulkDiscount: { minQty: 2, fixedPrice: 1600, label: '已享多件優惠 NT$1600/件' },
+            detail: `優寶滴 D3`
+          },
+          {
+            id: 17,
+            category: 'healthcare',
+            tag: '素食可食・每滴50μg K2',
+            name: '【加拿大K2】優納康 Menatok-Vitamin K2 (10ml/瓶 50μg/Drop)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%B0%81%E9%9D%A2.jpg',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/%E5%84%AA%E7%B4%8D%E5%BA%B7%E5%BA%B7%E5%85%A7%E9%A0%81.png'],
+            desc: '【素食可食】每滴含 50 微克天然維生素 K2。',
+            price: 2500,
+            buyQty: 1,
+            detail: `優納康 K2`
+          },
+          {
+            id: 30,
+            category: 'assistive',
+            tag: '醫材護具・旋鈕加壓',
+            name: '【Elife 原廠】旋鈕固定式護手腕 (拇指支撐/無拇指)',
+            desc: 'BOA微調旋鈕輕鬆穿脫與固定。',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg'],
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '拇指支撐款 - S', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' },
+              { label: '拇指支撐款 - M', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' },
+              { label: '拇指支撐款 - L', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' },
+              { label: '拇指支撐款 - XL', price: 3500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0661.jpeg' }
+            ],
+            detail: `Elife 護手腕`
+          },
+          {
+            id: 31,
+            category: 'assistive',
+            tag: '專業醫療輔具・氣壓固定',
+            isOttobock: true,
+            discountBadge: '限宅配/免運',
+            name: '【Ottobock 奧托博克】氣壓式步行器 (短/長)',
+            image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg',
+            images: ['https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg'],
+            desc: '德國 Ottobock 國際大廠研發！［本商品限定宅配免運］',
+            selectedVariantIndex: 0,
+            buyQty: 1,
+            variants: [
+              { label: '短筒 S (歐碼 36-38)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' },
+              { label: '短筒 M (歐碼 39-42)', price: 9500, image: 'https://raw.githubusercontent.com/doraemon770101/github.io/main/images/IMG_0428.jpeg' }
+            ],
+            detail: `Ottobock 氣壓式步行器`
+          }
+        ],
+
+        get filteredProducts() {
+          return this.products.filter(p => {
+            const matchesCategory = (this.currentCategory === 'all') || (p.category === this.currentCategory);
+            const matchesQuery = !this.searchQuery || 
+              p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+              p.desc.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+              p.tag.toLowerCase().includes(this.searchQuery.toLowerCase());
+            return matchesCategory && matchesQuery;
+          });
+        },
+
+        getCategoryCount(catId) {
+          if (catId === 'all') return this.products.length;
+          return this.products.filter(p => p.category === catId).length;
+        },
+
+        getCurrentProductImage(product) {
+          if (product.variants && product.variants.length > 0) {
+            const idx = product.selectedVariantIndex || 0;
+            return product.variants[idx]?.image || product.image;
+          }
+          return product.image;
+        },
+
+        getActiveModalImages() {
+          if (!this.activeModalProduct) return [];
+          const p = this.activeModalProduct;
+          if (p.variants && p.variants.length > 0) {
+            const idx = p.selectedVariantIndex || 0;
+            const variant = p.variants[idx];
+            if (variant && variant.images && variant.images.length > 0) {
+              return variant.images;
+            }
+          }
+          return p.images || [p.image];
+        },
+
+        getProductUnitPrice(product) {
+          if (product.variants && product.variants.length > 0) {
+            const idx = product.selectedVariantIndex || 0;
+            return product.variants[idx]?.price || product.price;
+          }
+          return product.price;
+        },
+
+        isVariantEligibleForDiscount(product) {
+          if (!product || !product.bulkDiscount) return false;
+          if (product.variants && product.variants.length > 1) {
+            const currentLabel = product.variants[product.selectedVariantIndex]?.label || '';
+            if (!currentLabel.includes('大盒')) return false;
+          }
+          return true;
+        },
+
+        isProductBadgeVisible(product) {
+          if (!product.discountBadge) return false;
+          if (product.variants && product.variants.length > 1) {
+            const currentLabel = product.variants[product.selectedVariantIndex]?.label || '';
+            if (!currentLabel.includes('大盒')) return false;
+          }
+          return true;
+        },
+
+        isProductDiscountActive(product) {
+          if (!this.isVariantEligibleForDiscount(product)) return false;
+          const qty = product.buyQty || 1;
+          return qty >= product.bulkDiscount.minQty;
+        },
+
+        getProductEffectiveUnitPrice(product) {
+          const unit = this.getProductUnitPrice(product);
+          if (this.isProductDiscountActive(product)) {
+            if (product.bulkDiscount.fixedPrice) return product.bulkDiscount.fixedPrice;
+            if (product.bulkDiscount.rate) return Math.round(unit * product.bulkDiscount.rate);
+          }
+          return unit;
+        },
+
+        getProductRawTotal(product) {
+          const qty = product.buyQty || 1;
+          return this.getProductUnitPrice(product) * qty;
+        },
+
+        getProductCalculatedTotal(product) {
+          const qty = product.buyQty || 1;
+          return this.getProductEffectiveUnitPrice(product) * qty;
+        },
+
+        selectVariant(product, index) {
+          product.selectedVariantIndex = index;
+          if (this.activeModalProduct && this.activeModalProduct.id === product.id) {
+            this.modalActiveImage = product.variants[index]?.image || product.image;
+          }
+        },
+
+        changeBuyQty(product, change) {
+          let qty = (product.buyQty || 1) + change;
+          if (qty < 1) qty = 1;
+          product.buyQty = qty;
+        },
+
+        openModal(product) {
+          this.activeModalProduct = product;
+          this.modalActiveImage = this.getCurrentProductImage(product);
+          this.modalOpen = true;
+        },
+
+        addToCart(product) {
+          const qty = product.buyQty || 1;
+          let variantLabel = '';
+          let unitPrice = product.price;
+          let currentImg = product.image;
+
+          if (product.variants && product.variants.length > 0) {
+            const idx = product.selectedVariantIndex || 0;
+            variantLabel = product.variants[idx].label;
+            unitPrice = product.variants[idx].price;
+            currentImg = product.variants[idx].image || currentImg;
+          }
+
+          const existingIndex = this.cart.findIndex(item => item.id === product.id && item.variant === variantLabel);
+
+          let itemBulkDiscount = product.bulkDiscount ? { ...product.bulkDiscount } : null;
+          if (variantLabel && !variantLabel.includes('大盒') && itemBulkDiscount) {
+            itemBulkDiscount = null;
+          }
+
+          if (existingIndex > -1) {
+            this.cart[existingIndex].qty += qty;
+          } else {
+            this.cart.push({
+              id: product.id,
+              name: product.name,
+              variant: variantLabel,
+              originalPrice: unitPrice,
+              price: unitPrice,
+              image: currentImg,
+              qty: qty,
+              isOttobock: !!product.isOttobock,
+              bulkDiscount: itemBulkDiscount
+            });
+          }
+
+          this.recalculateCartPrices();
+          if (this.hasOttobock) {
+            this.orderForm.shipping = '黑貓宅急便(宅配到府)';
+          }
+          this.cartOpen = true;
+        },
+
+        recalculateCartPrices() {
+          this.cart.forEach(item => {
+            if (item.bulkDiscount && item.qty >= item.bulkDiscount.minQty) {
+              if (item.bulkDiscount.fixedPrice) {
+                item.price = item.bulkDiscount.fixedPrice;
+              } else if (item.bulkDiscount.rate) {
+                item.price = Math.round(item.originalPrice * item.bulkDiscount.rate);
+              }
+            } else if (item.originalPrice) {
+              item.price = item.originalPrice;
+            }
+          });
+        },
+
+        updateCartQty(index, change) {
+          this.cart[index].qty += change;
+          if (this.cart[index].qty <= 0) {
+            this.cart.splice(index, 1);
+          } else {
+            this.recalculateCartPrices();
+          }
+          if (this.hasOttobock) {
+            this.orderForm.shipping = '黑貓宅急便(宅配到府)';
+          }
+        },
+
+        removeFromCart(index) {
+          this.cart.splice(index, 1);
+          if (this.hasOttobock) {
+            this.orderForm.shipping = '黑貓宅急便(宅配到府)';
+          }
+        },
+
+        get totalCartCount() {
+          return this.cart.reduce((sum, item) => sum + item.qty, 0);
+        },
+
+        get hasOttobock() {
+          return this.cart.some(item => item.isOttobock);
+        },
+
+        get cartSubtotal() {
+          return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        },
+
+        get cartShippingFee() {
+          if (this.cart.length === 0) return 0;
+          if (this.hasOttobock) return 0;
+          if (this.orderForm.shipping && this.orderForm.shipping.includes('宅配')) {
+            return 120;
+          }
+          return this.cartSubtotal >= 1000 ? 0 : 60;
+        },
+
+        get cartShippingFeeText() {
+          if (this.hasOttobock) return '專屬宅配免運';
+          if (this.orderForm.shipping && this.orderForm.shipping.includes('宅配')) {
+            return '宅配常態計費';
+          }
+          return '享超商免運';
+        },
+
+        get cartFinalTotal() {
+          return this.cartSubtotal + this.cartShippingFee;
+        },
+
+        checkShippingConstraint() {
+          if (this.hasOttobock) {
+            this.orderForm.shipping = '黑貓宅急便(宅配到府)';
+          }
+        },
+
+        triggerCheckoutConfirmation() {
+          if (this.cart.length === 0) return;
+          if (this.hasOttobock) {
+            this.orderForm.shipping = '黑貓宅急便(宅配到府)';
+          }
+          this.checkoutNoticeModalOpen = true;
+        },
+
+        // 使用 fetch (POST with no-cors) 完美連動您的 Google 試算表
+        submitOrderToGoogleForm() {
+          if (this.hasOttobock) {
+            this.orderForm.shipping = '黑貓宅急便(宅配到府)';
+          }
+          this.isSubmitting = true;
+
+          let itemsSummary = this.cart.map(item => `${item.name} ${item.variant ? '('+item.variant+')' : ''} x ${item.qty} (NT$${item.price})`).join('；');
+
+          let formData = new URLSearchParams();
+          formData.append('name', this.orderForm.name);
+          formData.append('phone', this.orderForm.phone);
+          formData.append('email', this.orderForm.email);
+          formData.append('shipping', this.orderForm.shipping);
+          formData.append('address', this.orderForm.address);
+          formData.append('items', itemsSummary);
+          formData.append('subtotal', this.cartSubtotal);
+          formData.append('shippingFee', this.cartShippingFee);
+          formData.append('total', this.cartFinalTotal);
+
+          // 透過您的 Google Apps Script 網址發送
+          fetch('https://script.google.com/macros/s/AKfycbzXbk9km4e9O2lC9ztbcL7yzvRH2jDK8baVL-0Wj2Ej_YyiekfARpgXnOjdGRZFisuwXw/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            body: formData
+          }).then(() => {
+            this.isSubmitting = false;
+            this.checkoutNoticeModalOpen = false;
+            this.orderSuccessModalOpen = true;
+          }).catch((error) => {
+            this.isSubmitting = false;
+            this.checkoutNoticeModalOpen = false;
+            this.orderSuccessModalOpen = true;
+          });
+        }
+      }
+    }
+  </script>
+</body>
+</html>
